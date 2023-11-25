@@ -36,6 +36,10 @@ public class GameApp extends Application {
             gameManager.handleKeyPress(event);
         });
 
+        scene.setOnKeyReleased(event -> {
+            gameManager.handleKeyRelease(event);
+        });
+
         primaryStage.show();
 
         // Start the game loop
@@ -44,6 +48,7 @@ public class GameApp extends Application {
     }
 
     private class GameLoop extends AnimationTimer {
+
         private long lastUpdateTime = 0;
 
         @Override
@@ -57,8 +62,8 @@ public class GameApp extends Application {
             // 60 FPS
             long targetFrameTime = 1_000_000_000L / 60;
             if (elapsedTime >= targetFrameTime) {
-                // Update your game logic here
-                gameManager.update(elapsedTime);
+                // Update your game logic here and pass elapsed time to the GameManager
+                gameManager.update(elapsedTime / 1e9); // Convert nanoseconds to seconds
 
                 // Clear the canvas
                 GraphicsContext gc = canvas.getGraphicsContext2D();
