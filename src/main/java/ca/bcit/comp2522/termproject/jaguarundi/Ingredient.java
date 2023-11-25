@@ -1,16 +1,11 @@
 package ca.bcit.comp2522.termproject.jaguarundi;
 
-public class Ingredient {
-    private String name;
+public class Ingredient extends Item {
     private int stage;
 
     public Ingredient(final String name) {
-        this.name = name;
+        super(name);
         this.stage = 0;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public int getStage() {
