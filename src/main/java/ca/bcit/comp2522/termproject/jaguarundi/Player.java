@@ -11,11 +11,13 @@ public class Player {
     public final static Color PLAYER_COLOR = Color.BLUE;
     public final static int INVENTORY_SIZE = 1;
 
-    private int speed;
-    private int xPosition;
-    private int yPosition;
-    private int width;
-    private int height;
+    private double speed;
+    private double xPosition;
+    private double yPosition;
+    private double xDirection;
+    private double yDirection;
+    private double width;
+    private double height;
     private Color color;
     private Bottle bottle;
     private ArrayList<Ingredient> inventory;
@@ -36,39 +38,27 @@ public class Player {
         gc.fillRect(xPosition, yPosition, width, height);
     }
 
-    public double getSpeed() {
-        return speed;
-    }
-
-    public int getXPosition() {
+    public double getXPosition() {
         return xPosition;
     }
 
-    public int getYPosition() {
+    public double getYPosition() {
         return yPosition;
     }
 
-    public void setSpeed(int speed) {
-        this.speed = speed;
+    public void setXDirection(int xDirection) {
+        this.xDirection = xDirection;
     }
 
-    public void setXPosition(int xPosition) {
-        this.xPosition = xPosition;
+    public void setYDirection(int yDirection) {
+        this.yDirection = yDirection;
     }
 
-    public void setYPosition(int yPosition) {
-        this.yPosition = yPosition;
-    }
-
-    public Bottle getBottle() {
-        return bottle;
-    }
-
-    public int getWidth() {
+    public double getWidth() {
         return width;
     }
 
-    public int getHeight() {
+    public double getHeight() {
         return height;
     }
 
@@ -76,10 +66,17 @@ public class Player {
         return inventory;
     }
 
-    public void move(int x, int y) {
-        // TODO: Check for keyboard input
-        xPosition += x * speed;
-        yPosition += y * speed;
+    public void move(double elapsedTime) {
+        if (xDirection == 1) {
+            xPosition += speed * elapsedTime;
+        } else if (xDirection == -1) {
+            xPosition -= speed * elapsedTime;
+        }
+        if (yDirection == 1) {
+            yPosition += speed * elapsedTime;
+        } else if (yDirection == -1) {
+            yPosition -= speed * elapsedTime;
+        }
     }
 
     public void addIngredientToInventory(final Ingredient ingredient) {

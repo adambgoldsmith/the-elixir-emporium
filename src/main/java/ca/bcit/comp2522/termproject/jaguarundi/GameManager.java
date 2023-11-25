@@ -7,6 +7,8 @@ import javafx.scene.input.KeyEvent;
 import java.util.ArrayList;
 
 public class GameManager {
+    private long lastUpdateTime = 0;
+
     private Player player;
     private Cauldron cauldron;
     private BottleBox bottleBox;
@@ -17,7 +19,7 @@ public class GameManager {
     private int day;
 
     public GameManager() {
-        this.player = new Player(10, 0, 0);
+        this.player = new Player(200, 0, 0);
         this.cauldron = new Cauldron(75, 376);
         this.bottleBox = new BottleBox(156, 230);
         this.ingredientBox = new IngredientBox(423, 26);
@@ -31,14 +33,17 @@ public class GameManager {
         KeyCode code = event.getCode();
         // Handle key presses
         if (code == KeyCode.W) {
-            player.move(0, -1); // Move up
-        } else if (code == KeyCode.A) {
-            player.move(-1, 0); // Move left
+            player.setYDirection(-1);
         } else if (code == KeyCode.S) {
-            player.move(0, 1); // Move down
+            player.setYDirection(1);
+        }
+        if (code == KeyCode.A) {
+            player.setXDirection(-1);
         } else if (code == KeyCode.D) {
-            player.move(1, 0); // Move right
-        } else if (code == KeyCode.E) {
+            player.setXDirection(1);
+        }
+
+        if (code == KeyCode.E) {
             if (isPlayerNearInteractable(bottleBox)) {
                 player.pickUpBottle(new Bottle());
             } else if (isPlayerNearInteractable(ingredientBox)) {
@@ -51,12 +56,33 @@ public class GameManager {
                 System.out.println("Nothing to interact with");
             }
         }
+    }
 
-
+    public void handleKeyRelease(KeyEvent event) {
+        KeyCode code = event.getCode();
+        // Handle key releases
+        if (code == KeyCode.W) {
+            player.setYDirection(0);
+        } else if (code == KeyCode.S) {
+            player.setYDirection(0);
+        }
+        if (code == KeyCode.A) {
+            player.setXDirection(0);
+        } else if (code == KeyCode.D) {
+            player.setXDirection(0);
+        }
     }
 
     public void update(double elapsedTime) {
-        // Update the game objects
+        if (lastUpdateTime == 0) {
+            lastUpdateTime = System.nanoTime();
+        }
+        long currentTime = System.nanoTime();
+        double delta = (currentTime - lastUpdateTime) / 1e9;
+        lastUpdateTime = currentTime;
+
+        // Update the game objects using delta time
+        player.move(delta);
         isPlayerCollidingWithCollidable(ingredientBox);
     }
 
