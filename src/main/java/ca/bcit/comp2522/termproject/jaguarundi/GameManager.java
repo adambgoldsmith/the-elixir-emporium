@@ -6,6 +6,12 @@ import javafx.scene.input.KeyEvent;
 
 import java.util.ArrayList;
 
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+
+import java.util.ArrayList;
+
 public class GameManager {
     private long lastUpdateTime = 0;
 
@@ -14,16 +20,19 @@ public class GameManager {
     private BottleBox bottleBox;
     private IngredientBox ingredientBox;
     private ArrayList<Customer> customers;
+    private ArrayList<Wall> walls;
     private int rubies;
     private double timeRemaining;
     private int day;
 
     public GameManager() {
-        this.player = new Player(200, 0, 0);
+        this.player = new Player(200, 500, 500);
         this.cauldron = new Cauldron(75, 376);
         this.bottleBox = new BottleBox(156, 230);
         this.ingredientBox = new IngredientBox(423, 26);
         this.customers = new ArrayList<>();
+        this.walls = new ArrayList<>();
+        spawnWalls();
         this.rubies = 0;
         this.timeRemaining = 0.0;
         this.day = 0;
@@ -45,16 +54,30 @@ public class GameManager {
 
         if (code == KeyCode.E) {
             if (isPlayerNearInteractable(bottleBox)) {
-                player.pickUpBottle(new Bottle());
+                pickBottle();
             } else if (isPlayerNearInteractable(ingredientBox)) {
-//                player.pickUpIngredient(new Ingredient());
-                System.out.println("Picked up ingredient");
+                pickIngredient();
             } else if (isPlayerNearInteractable(cauldron)) {
-//                player.addIngredientToCauldron(cauldron);
-                System.out.println("Added ingredient to cauldron");
+                // * Is there a better way to do this? VV
+                if (cauldron.getIngredient() == null &&
+                        player.getInventory() != null &&
+                        player.getInventory().getClass() == Ingredient.class) {
+                    cauldron.addIngredient((Ingredient) player.getInventory());
+                    player.removeFromInventory();
+                } else if (cauldron.getIngredient() != null &&
+                        player.getInventory() != null &&
+                        player.getInventory().getClass() == Bottle.class) {
+                    Bottle bottle = (Bottle) player.getInventory();
+                    bottle.addIngredient(cauldron.getIngredient());
+                    cauldron.removeIngredient();
+                }
             } else {
                 System.out.println("Nothing to interact with");
             }
+        }
+
+        if (code == KeyCode.I) {
+            displayInventory();
         }
     }
 
@@ -83,7 +106,14 @@ public class GameManager {
 
         // Update the game objects using delta time
         player.move(delta);
+        player.animate();
         isPlayerCollidingWithCollidable(ingredientBox);
+        isPlayerCollidingWithCollidable(bottleBox);
+        isPlayerCollidingWithCollidable(cauldron);
+        for (Wall wall : walls) {
+            isPlayerCollidingWithCollidable(wall);
+        }
+        cauldron.boil(delta);
     }
 
     public void drawObjects(GraphicsContext gc) {
@@ -94,12 +124,22 @@ public class GameManager {
         for (Customer customer : customers) {
             customer.draw(gc);
         }
+        for (Wall wall : walls) {
+            wall.draw(gc);
+        }
+    }
+
+    public void spawnWalls() {
+        walls.add(new Wall(0, 0, 800, 25));
+        walls.add(new Wall(0, 0, 25, 600));
+        walls.add(new Wall(0, 575, 800, 25));
+        walls.add(new Wall(775, 0, 25, 600));
     }
 
     public boolean isPlayerNearInteractable(Interactable interactable) {
         // Calculate the distance between the player and the interactable
-        double playerX = player.getXPosition() + (double) player.getWidth() / 2;
-        double playerY = player.getYPosition() + (double) player.getHeight() / 2;
+        double playerX = player.getXPosition() + player.getWidth() / 2;
+        double playerY = player.getYPosition() + player.getHeight() / 2;
         double interactableX = interactable.getXPosition() + (double) interactable.getWidth() / 2;
         double interactableY = interactable.getYPosition() + (double) interactable.getHeight() / 2;
 
@@ -112,27 +152,51 @@ public class GameManager {
     }
 
     public void isPlayerCollidingWithCollidable(Collidable collidable) {
-        // Calculate the distance between the player and the interactable
-        double playerX = player.getXPosition() + (double) player.getWidth() / 2;
-        double playerY = player.getYPosition() + (double) player.getHeight() / 2;
-        double collidableX = collidable.getXPosition() + (double) collidable.getWidth() / 2;
-        double collidableY = collidable.getYPosition() + (double) collidable.getHeight() / 2;
+        double xOverlap = Math.max(0, Math.min(player.getXPosition() + player.getWidth(), collidable.getXPosition() + collidable.getWidth()) - Math.max(player.getXPosition(), collidable.getXPosition()));
+        double yOverlap = Math.max(0, Math.min(player.getYPosition() + player.getHeight(), collidable.getYPosition() + collidable.getHeight()) - Math.max(player.getYPosition(), collidable.getYPosition()));
 
-        double distance = Math.sqrt(Math.pow(playerX - collidableX, 2) + Math.pow(playerY - collidableY, 2));
-
-        if (distance < 50) {
-            if (player.getXPosition() + player.getWidth() > collidable.getXPosition()) {
-                System.out.println("Left collided! ");
-                if (player.getXPosition() < collidable.getXPosition() + collidable.getWidth()) {
-                    System.out.println("Right collided! ");
-                } else if (player.getYPosition() + player.getHeight() > collidable.getYPosition()) {
-                    System.out.println("Top collided! ");
-                } else if (player.getYPosition() < collidable.getYPosition() + collidable.getHeight()) {
-                    System.out.println("Bottom collided! ");
+        if (xOverlap > 0 && yOverlap > 0) {
+            if (xOverlap < yOverlap) {
+                // Horizontal collision
+                if (player.getXPosition() + player.getWidth() / 2 < collidable.getXPosition() + collidable.getWidth() / 2) {
+                    player.setXPosition(collidable.getXPosition() - player.getWidth());
+                } else {
+                    player.setXPosition(collidable.getXPosition() + collidable.getWidth());
                 }
             } else {
-                System.out.println("Not collided! ");
+                // Vertical collision
+                if (player.getYPosition() + player.getHeight() / 2 < collidable.getYPosition() + collidable.getHeight() / 2) {
+                    player.setYPosition(collidable.getYPosition() - player.getHeight());
+                } else {
+                    player.setYPosition(collidable.getYPosition() + collidable.getHeight());
+                }
             }
+        }
+    }
+
+    public void pickBottle() {
+        if (player.getInventory() != null && player.getInventory().getClass() == Bottle.class&& ((Bottle) player.getInventory()).getIngredients().isEmpty()) {
+            player.removeFromInventory();
+        }
+        else{
+            player.pickUpBottle(new Bottle());
+        }
+    }
+
+    public void pickIngredient() {
+        if (player.getInventory() != null && player.getInventory().getClass() == Ingredient.class) {
+            player.removeFromInventory();
+        }
+        else{
+            player.pickUpIngredient(new Ingredient("Test Ingredient"));
+        }
+    }
+
+    public void displayInventory() {
+        if (player.getInventory() != null) {
+            System.out.println(player.getInventory().getName());
+        } else {
+            System.out.println("Inventory is empty");
         }
     }
 
@@ -167,4 +231,4 @@ public class GameManager {
     public int getDay() {
         return day;
     }
-}
+}}
