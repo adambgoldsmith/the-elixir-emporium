@@ -3,8 +3,7 @@ package ca.bcit.comp2522.termproject.jaguarundi;
 public class Ingredient extends Item {
     private int stage;
 
-    public Ingredient(final String name) {
-        super(name);
+    public Ingredient() {
         this.stage = 0;
     }
 
