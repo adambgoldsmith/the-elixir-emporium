@@ -3,44 +3,60 @@ package ca.bcit.comp2522.termproject.jaguarundi;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
+
 public class IngredientBox extends Interactable implements Collidable {
     public static final int INGREDIENT_BOX_WIDTH = 50;
     public static final int INGREDIENT_BOX_HEIGHT = 50;
-    public static final Color INGREDIENT_BOX_COLOR = Color.DARKORANGE;
 
-    private final int xPosition;
-    private final int yPosition;
-    private final int width;
-    private final int height;
-    private final Color color;
+    private Ingredient ingredient;
+    private double xPosition;
+    private double yPosition;
+    private final double width;
+    private final double height;
+    private Image sprite;
 
 
-    public IngredientBox(final int xPosition, final int yPosition) {
-        this.xPosition = xPosition;
-        this.yPosition = yPosition;
+    public IngredientBox(final Ingredient ingredient, final Image sprite) {
+        this.ingredient = ingredient;
+        this.xPosition = 0;
+        this.yPosition = 0;
         this.width = INGREDIENT_BOX_WIDTH;
         this.height = INGREDIENT_BOX_HEIGHT;
-        this.color = INGREDIENT_BOX_COLOR;
+        this.sprite = sprite;
     }
 
-    public void draw(final GraphicsContext graphicsContext) {
-        graphicsContext.setFill(color);
-        graphicsContext.fillRect(xPosition, yPosition, width, height);
+    public void draw(final GraphicsContext gc) {
+        gc.setImageSmoothing(false);
+        gc.drawImage(sprite, xPosition, yPosition, width, height);
     }
 
-    public int getXPosition() {
+    public Ingredient getIngredient() {
+        return ingredient;
+    }
+
+    public double getXPosition() {
         return xPosition;
     }
 
-    public int getYPosition() {
+    public double getYPosition() {
         return yPosition;
     }
 
-    public int getWidth() {
+    public void setXPosition(double xPosition) {
+        this.xPosition = xPosition;
+    }
+
+    public void setYPosition(double yPosition) {
+        this.yPosition = yPosition;
+    }
+
+    public double getWidth() {
         return width;
     }
 
-    public int getHeight() {
+    public double getHeight() {
         return height;
     }
 }
