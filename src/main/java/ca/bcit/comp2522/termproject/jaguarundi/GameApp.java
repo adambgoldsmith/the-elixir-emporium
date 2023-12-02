@@ -1,4 +1,5 @@
 package ca.bcit.comp2522.termproject.jaguarundi;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -9,7 +10,9 @@ import javafx.animation.AnimationTimer;
 
 public class GameApp extends Application {
     private Canvas canvas;  // Define canvas as an instance variable
+    private TitleScreen titleScreen;
     private GameManager gameManager;
+    private boolean isGameStarted = true;
 
     public static void main(String[] args) {
         launch(args);
@@ -25,19 +28,20 @@ public class GameApp extends Application {
         primaryStage.setScene(scene);
 
         // Create a canvas to render your game
-        canvas = new Canvas(800, 600); // Set your preferred dimensions
+        canvas = new Canvas(1000, 550); // Set your preferred dimensions
         root.getChildren().add(canvas);
 
         // Initialize your game objects and set up your game loop here
+        titleScreen = new TitleScreen(this);
         gameManager = new GameManager();
 
         // Handle key events
         scene.setOnKeyPressed(event -> {
-            gameManager.handleKeyPress(event);
+            gameManager.registerKeyPress(event);
         });
 
         scene.setOnKeyReleased(event -> {
-            gameManager.handleKeyRelease(event);
+            gameManager.registerKeyRelease(event);
         });
 
         primaryStage.show();
@@ -59,21 +63,32 @@ public class GameApp extends Application {
 
             long elapsedTime = now - lastUpdateTime;
 
-            // 60 FPS
-            long targetFrameTime = 1_000_000_000L / 60;
-            if (elapsedTime >= targetFrameTime) {
-                // Update your game logic here and pass elapsed time to the GameManager
+            // Update your game logic here and pass elapsed time to the GameManager
+            if (isGameStarted) {
                 gameManager.update(elapsedTime / 1e9); // Convert nanoseconds to seconds
-
-                // Clear the canvas
-                GraphicsContext gc = canvas.getGraphicsContext2D();
-                gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-
-                // Draw your game objects
-                gameManager.drawObjects(gc);
-
-                lastUpdateTime = now;
+            } else {
+                // add mouse event handler
+                canvas.setOnMouseClicked(mouseEvent -> {
+                    titleScreen.update(mouseEvent);
+                });
             }
+
+            // Clear the canvas
+            GraphicsContext gc = canvas.getGraphicsContext2D();
+            gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+            // Draw game objects
+            if (isGameStarted) {
+                gameManager.drawObjects(gc);
+            } else {
+                titleScreen.draw(gc);
+            }
+
+            lastUpdateTime = now;
         }
+    }
+
+    public void setGameStarted(boolean isGameStarted) {
+        this.isGameStarted = isGameStarted;
     }
 }
