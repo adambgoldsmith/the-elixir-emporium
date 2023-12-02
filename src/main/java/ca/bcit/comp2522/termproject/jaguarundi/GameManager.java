@@ -1,99 +1,131 @@
 package ca.bcit.comp2522.termproject.jaguarundi;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 
 import java.util.ArrayList;
-
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Objects;
 
 public class GameManager {
     private long lastUpdateTime = 0;
 
-    private Player player;
-    private Cauldron cauldron;
-    private BottleBox bottleBox;
-    private IngredientBox ingredientBox;
-    private ArrayList<Customer> customers;
-    private ArrayList<Wall> walls;
+    public static final int DAY_LENGTH = 60;
+
+    private ArrayList<Level> levels;
+    private int currentLevelIndex;
     private int rubies;
     private double timeRemaining;
     private int day;
+    private Text inventoryText;
 
     public GameManager() {
-        this.player = new Player(200, 500, 500);
-        this.cauldron = new Cauldron(75, 376);
-        this.bottleBox = new BottleBox(156, 230);
-        this.ingredientBox = new IngredientBox(423, 26);
-        this.customers = new ArrayList<>();
-        this.walls = new ArrayList<>();
-        spawnWalls();
+        this.levels = new ArrayList<>();
+        this.currentLevelIndex = 0;
         this.rubies = 0;
-        this.timeRemaining = 0.0;
+        this.timeRemaining = DAY_LENGTH;
         this.day = 0;
+        this.inventoryText = new Text();
+        generateLevels();
+        initializeInventoryText();
     }
 
-    public void handleKeyPress(KeyEvent event) {
-        KeyCode code = event.getCode();
-        // Handle key presses
-        if (code == KeyCode.W) {
-            player.setYDirection(-1);
-        } else if (code == KeyCode.S) {
-            player.setYDirection(1);
-        }
-        if (code == KeyCode.A) {
-            player.setXDirection(-1);
-        } else if (code == KeyCode.D) {
-            player.setXDirection(1);
-        }
+    public void generateLevels() {
+        Level level1 = new Level(
+                this,
+                new Player(300, 400, 400),
+                new BottleBox(450, 250),
+                new TrashCan(500, 50),
+                createCauldrons(2),
+                createIngredientBoxes(),
+                createCustomers(),
+                createWalls()
+        );
+        level1.initializeObjectPositions(
+                new double[][]{{600, 150}, {300, 350}},
+                new double[][]{{200, 50}, {700, 450}},
+                new double[][]{{100, 550}, {100,550}, {100, 550}, {100,550}, {100, 550}},
+                new double[][]{{50, 0}, {0, 500}, {0, 0}, {750, 0}, {150, 50}}
+        );
+        levels.add(level1);
+        Level level2 = new Level(
+                this,
+                new Player(300, 400, 400),
+                new BottleBox(450, 250),
+                new TrashCan(200, 600),
+                createCauldrons(3),
+                createIngredientBoxes(),
+                createCustomers(),
+                createWalls()
+        );
+        level2.initializeObjectPositions(
+                new double[][]{{600, 350}, {300, 150}, {300, 400}},
+                new double[][]{{700, 150}, {200, 300}},
+                new double[][]{{0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}},
+                new double[][]{{50, 0}, {0, 500}, {0, 0}, {750, 0}, {150, 50}}
+        );
+        levels.add(level2);
+    }
 
-        if (code == KeyCode.E) {
-            if (isPlayerNearInteractable(bottleBox)) {
-                pickBottle();
-            } else if (isPlayerNearInteractable(ingredientBox)) {
-                pickIngredient();
-            } else if (isPlayerNearInteractable(cauldron)) {
-                // * Is there a better way to do this? VV
-                if (cauldron.getIngredient() == null &&
-                        player.getInventory() != null &&
-                        player.getInventory().getClass() == Ingredient.class) {
-                    cauldron.addIngredient((Ingredient) player.getInventory());
-                    player.removeFromInventory();
-                } else if (cauldron.getIngredient() != null &&
-                        player.getInventory() != null &&
-                        player.getInventory().getClass() == Bottle.class) {
-                    Bottle bottle = (Bottle) player.getInventory();
-                    bottle.addIngredient(cauldron.getIngredient());
-                    cauldron.removeIngredient();
-                }
-            } else {
-                System.out.println("Nothing to interact with");
-            }
+    public ArrayList<Cauldron> createCauldrons(int quantity) {
+        ArrayList<Cauldron> cauldrons = new ArrayList<>();
+        for (int i = 0; i < quantity; i++) {
+            cauldrons.add(new Cauldron());
         }
+        return cauldrons;
+    }
 
-        if (code == KeyCode.I) {
-            displayInventory();
+    public ArrayList<IngredientBox> createIngredientBoxes() {
+        ArrayList<IngredientBox> ingredientBoxes = new ArrayList<>();
+        ingredientBoxes.add(new HogrootBox());
+        ingredientBoxes.add(new FrostfernLeavesBox());
+        if (day == 2) {
+            // Add new ingredient box
+        }
+        if (day == 3) {
+            // Add new ingredient box
+        }
+        return ingredientBoxes;
+    }
+
+    public ArrayList<Customer> createCustomers() {
+        ArrayList<Customer> customers = new ArrayList<>();
+        // TODO: Add more customers
+        for (int i = 0; i < 5; i++) {
+            customers.add(new Customer(200, 50, 3));
+        }
+        return customers;
+    }
+
+    public ArrayList<Wall> createWalls() {
+        ArrayList<Wall> walls = new ArrayList<>();
+        walls.add(new Wall(700, 50, "top"));
+        walls.add(new Wall(800, 50, "bottom"));
+        walls.add(new Wall(50, 500, "side"));
+        walls.add(new Wall(50, 500, "side"));
+        walls.add(new Wall(50, 450, "counter"));
+        return walls;
+    }
+
+    public void registerKeyPress(KeyEvent event) {
+        // Hand off key presses to the current level
+        levels.get(currentLevelIndex).handleKeyPress(event);
+
+        KeyCode keyCode = event.getCode();
+        if (keyCode == KeyCode.K) {
+            currentLevelIndex = 0;
+        } else if (keyCode == KeyCode.L) {
+            currentLevelIndex = 1;
         }
     }
 
-    public void handleKeyRelease(KeyEvent event) {
-        KeyCode code = event.getCode();
-        // Handle key releases
-        if (code == KeyCode.W) {
-            player.setYDirection(0);
-        } else if (code == KeyCode.S) {
-            player.setYDirection(0);
-        }
-        if (code == KeyCode.A) {
-            player.setXDirection(0);
-        } else if (code == KeyCode.D) {
-            player.setXDirection(0);
-        }
+    public void registerKeyRelease(KeyEvent event) {
+        // Hand off key releases to the current level
+        levels.get(currentLevelIndex).handleKeyRelease(event);
     }
 
     public void update(double elapsedTime) {
@@ -104,121 +136,78 @@ public class GameManager {
         double delta = (currentTime - lastUpdateTime) / 1e9;
         lastUpdateTime = currentTime;
 
-        // Update the game objects using delta time
-        player.move(delta);
-        player.animate();
-        isPlayerCollidingWithCollidable(ingredientBox);
-        isPlayerCollidingWithCollidable(bottleBox);
-        isPlayerCollidingWithCollidable(cauldron);
-        for (Wall wall : walls) {
-            isPlayerCollidingWithCollidable(wall);
-        }
-        cauldron.boil(delta);
+        // Call updateLevel of the current level
+        levels.get(currentLevelIndex).updateLevel(delta);
+
+        // Update inventory text
+//        inventoryText.setText(updateInventoryText());
+
+        // Update day and time remaining
+        nextDay(delta);
     }
 
     public void drawObjects(GraphicsContext gc) {
-        player.draw(gc);
-        cauldron.draw(gc);
-        bottleBox.draw(gc);
-        ingredientBox.draw(gc);
-        for (Customer customer : customers) {
-            customer.draw(gc);
-        }
-        for (Wall wall : walls) {
-            wall.draw(gc);
-        }
+        // Draw side panel
+        drawSidePanel(gc);
+
+        // Call drawLevel of the current level
+        gc.setFill(Color.BLACK);
+        levels.get(currentLevelIndex).drawLevel(gc);
     }
 
-    public void spawnWalls() {
-        walls.add(new Wall(0, 0, 800, 25));
-        walls.add(new Wall(0, 0, 25, 600));
-        walls.add(new Wall(0, 575, 800, 25));
-        walls.add(new Wall(775, 0, 25, 600));
-    }
-
-    public boolean isPlayerNearInteractable(Interactable interactable) {
-        // Calculate the distance between the player and the interactable
-        double playerX = player.getXPosition() + player.getWidth() / 2;
-        double playerY = player.getYPosition() + player.getHeight() / 2;
-        double interactableX = interactable.getXPosition() + (double) interactable.getWidth() / 2;
-        double interactableY = interactable.getYPosition() + (double) interactable.getHeight() / 2;
-
-        double distance = Math.sqrt(Math.pow(playerX - interactableX, 2) + Math.pow(playerY - interactableY, 2));
-
-        // Define a threshold distance for "near"
-        double threshold = 75.0; // Adjust this threshold as needed
-
-        return distance <= threshold;
-    }
-
-    public void isPlayerCollidingWithCollidable(Collidable collidable) {
-        double xOverlap = Math.max(0, Math.min(player.getXPosition() + player.getWidth(), collidable.getXPosition() + collidable.getWidth()) - Math.max(player.getXPosition(), collidable.getXPosition()));
-        double yOverlap = Math.max(0, Math.min(player.getYPosition() + player.getHeight(), collidable.getYPosition() + collidable.getHeight()) - Math.max(player.getYPosition(), collidable.getYPosition()));
-
-        if (xOverlap > 0 && yOverlap > 0) {
-            if (xOverlap < yOverlap) {
-                // Horizontal collision
-                if (player.getXPosition() + player.getWidth() / 2 < collidable.getXPosition() + collidable.getWidth() / 2) {
-                    player.setXPosition(collidable.getXPosition() - player.getWidth());
-                } else {
-                    player.setXPosition(collidable.getXPosition() + collidable.getWidth());
-                }
-            } else {
-                // Vertical collision
-                if (player.getYPosition() + player.getHeight() / 2 < collidable.getYPosition() + collidable.getHeight() / 2) {
-                    player.setYPosition(collidable.getYPosition() - player.getHeight());
-                } else {
-                    player.setYPosition(collidable.getYPosition() + collidable.getHeight());
-                }
-            }
-        }
-    }
-
-    public void pickBottle() {
-        if (player.getInventory() != null && player.getInventory().getClass() == Bottle.class&& ((Bottle) player.getInventory()).getIngredients().isEmpty()) {
-            player.removeFromInventory();
-        }
-        else{
-            player.pickUpBottle(new Bottle());
-        }
-    }
-
-    public void pickIngredient() {
-        if (player.getInventory() != null && player.getInventory().getClass() == Ingredient.class) {
-            player.removeFromInventory();
-        }
-        else{
-            player.pickUpIngredient(new Ingredient("Test Ingredient"));
-        }
-    }
-
-    public void displayInventory() {
-        if (player.getInventory() != null) {
-            System.out.println(player.getInventory().getName());
+    // TODO: Create static variables to store the images for the side panel and the ruby. Split into atomic methods.
+    public void drawSidePanel(GraphicsContext gc) {
+        gc.setImageSmoothing(false);
+        gc.drawImage(new Image(Objects.requireNonNull(GameManager.class.getResourceAsStream("sidebar.png"))), 800, 0, 200, 550);
+        gc.setFill(Color.BLACK);
+        gc.drawImage(new Image(Objects.requireNonNull(GameManager.class.getResourceAsStream("ruby.png"))), 850, 75, 15, 31);
+        gc.fillText("" + rubies, 900, 100);
+        gc.fillText(String.format("%.2f", timeRemaining), 850, 125);
+        gc.fillText("Day: " + day, 850, 150);
+        Item currentInventory = levels.get(currentLevelIndex).getPlayer().getInventory();
+        gc.fillText("Inventory: ", 850, 200);
+        if (currentInventory != null) {
+            gc.fillText(currentInventory.getClass().getSimpleName(), 850, 225);
         } else {
-            System.out.println("Inventory is empty");
+            gc.fillText("Empty", 850, 225);
+        }
+        gc.fillText("Current Order: ", 850, 300);
+    }
+
+    // TODO: remove day since it is redundant?
+    public void nextDay(double delta) {
+        if (timeRemaining > 0) {
+//            timeRemaining -= delta;
+        }  else if (day < 3) {
+            currentLevelIndex++;
+            day++;
+            timeRemaining = DAY_LENGTH;
+            System.out.println("Day: " + day);
+        } else {
+            System.out.println("The End");
         }
     }
 
-    public Player getPlayer() {
-        return player;
+    public void incrementRubies(int rubies) {
+        this.rubies += rubies;
     }
 
-    public Cauldron getCauldron() {
-        return cauldron;
+    public void initializeInventoryText() {
+        inventoryText.setX(50);
+        inventoryText.setY(50);
     }
 
-    public BottleBox getBottleBox() {
-        return bottleBox;
-    }
-
-    public IngredientBox getIngredientBox() {
-        return ingredientBox;
-    }
-
-    public ArrayList<Customer> getCustomers() {
-        return customers;
-    }
+//    // TODO: Refactor inventory text for efficiency and move to current level (or find work around)
+//    public String updateInventoryText() {
+//        Item currentInventory = player.getInventory();
+//        String text = "";
+//        if (currentInventory != null) {
+//            text += currentInventory.getClass().getSimpleName();
+//        } else {
+//            text += "Empty";
+//        }
+//        return text;
+//    }
 
     public int getRubies() {
         return rubies;
