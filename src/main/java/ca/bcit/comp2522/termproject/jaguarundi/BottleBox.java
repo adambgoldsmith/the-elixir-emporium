@@ -1,4 +1,5 @@
 package ca.bcit.comp2522.termproject.jaguarundi;
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -7,10 +8,10 @@ public class BottleBox extends Interactable implements Collidable {
     public static final int BOTTLE_BOX_HEIGHT = 50;
     public static final Color BOTTLE_BOX_COLOR = Color.BROWN;
 
-    private final int xPosition;
-    private final int yPosition;
-    private final int width;
-    private final int height;
+    private final double xPosition;
+    private final double yPosition;
+    private final double width;
+    private final double height;
     private final Color color;
 
 
@@ -27,19 +28,19 @@ public class BottleBox extends Interactable implements Collidable {
         graphicsContext.fillRect(xPosition, yPosition, width, height);
     }
 
-    public int getXPosition() {
+    public double getXPosition() {
         return xPosition;
     }
 
-    public int getYPosition() {
+    public double getYPosition() {
         return yPosition;
     }
 
-    public int getWidth() {
+    public double getWidth() {
         return width;
     }
 
-    public int getHeight() {
+    public double getHeight() {
         return height;
     }
 }
