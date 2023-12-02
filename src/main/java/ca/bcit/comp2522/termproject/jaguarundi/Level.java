@@ -92,3 +92,113 @@ public class Level {
         trashCan.draw(gc);
         player.draw(gc);
     }
+
+    public void handleKeyPress(KeyEvent event) {
+        KeyCode code = event.getCode();
+        // Handle key presses specific to this level
+        if (code == KeyCode.W) {
+            player.setYDirection(-1);
+        } else if (code == KeyCode.S) {
+            player.setYDirection(1);
+        }
+        if (code == KeyCode.A) {
+            player.setXDirection(-1);
+        } else if (code == KeyCode.D) {
+            player.setXDirection(1);
+        }
+
+        if (code == KeyCode.E) {
+            handleInteractions(); // Handle interactions when the 'E' key is pressed
+        }
+    }
+
+    public void handleKeyRelease(KeyEvent event) {
+        KeyCode code = event.getCode();
+        // Handle key releases specific to this level
+        if (code == KeyCode.W || code == KeyCode.S) {
+            player.setYDirection(0);
+        }
+        if (code == KeyCode.A || code == KeyCode.D) {
+            player.setXDirection(0);
+        }
+    }
+
+    private void handleInteractions() {
+        for (IngredientBox ingredientBox : ingredientBoxes) {
+            if (player.isNearInteractable(ingredientBox)) {
+                player.handleIngredient(ingredientBox);
+            }
+        }
+
+        for (Cauldron cauldron : cauldrons) {
+            if (player.isNearInteractable(cauldron)) {
+                // TODO: Refactor this logic into the Cauldron class/beautify it.
+                if (cauldron.getIngredient() == null &&
+                        player.getInventory() != null &&
+                        player.getInventory() instanceof Ingredient) {
+                    cauldron.addIngredient((Ingredient) player.getInventory());
+                    player.removeFromInventory();
+                } else if (cauldron.getIngredient() != null &&
+                        player.getInventory() != null &&
+                        player.getInventory().getClass() == Bottle.class &&
+                        cauldron.getIngredient().getStage() == 1) { // Change this?
+                    Bottle bottle = (Bottle) player.getInventory();
+                    bottle.addIngredient(cauldron.getIngredient());
+                    cauldron.removeIngredient();
+                }
+            }
+        }
+
+        for (Customer customer : customers) {
+            if (player.isNearInteractable(customer)) {
+                if (player.getInventory() != null && player.getInventory().getClass() == Bottle.class) {
+                    if (verifyOrder(customer)) {
+                        System.out.println("Correct order!");
+                        player.removeFromInventory();
+                    } else {
+                        System.out.println("Incorrect order!");
+                        player.removeFromInventory();
+                    }
+                    copyCustomers.remove(customer);
+                }
+            }
+        }
+
+        if (player.isNearInteractable(bottleBox)) {
+            player.handleBottle();
+        }
+        if(player.isNearInteractable(trashCan)){
+            player.removeFromInventory();
+        }
+    }
+
+    public boolean verifyOrder(Customer customer) {
+        Bottle playerBottle = (Bottle) player.getInventory();
+        ArrayList<Ingredient> playerOrder = playerBottle.getIngredients();
+        ArrayList<Ingredient> customerOrder = customer.getOrder();
+        System.out.println(playerOrder);
+        System.out.println(customerOrder);
+
+
+        int correctCount = 0;
+
+        // TODO: fix this so it only counts an ingredient once.
+        for (Ingredient playerIngredient : playerOrder) {
+            for (Ingredient customerIngredient : customerOrder) {
+                if (playerIngredient.getClass() == customerIngredient.getClass()) {
+                    correctCount++;
+                    break;
+                }
+            }
+        }
+
+        customer.setSatisfactionLevel(((double) correctCount / customerOrder.size()) * 100);
+        gameManager.incrementRubies(customer.calculateRubies(correctCount));
+        return correctCount > 0;
+    }
+
+
+    public Player getPlayer() {
+        return player;
+    }
+}
