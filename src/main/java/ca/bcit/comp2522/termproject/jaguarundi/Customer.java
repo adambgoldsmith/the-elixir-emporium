@@ -10,6 +10,19 @@ import java.util.random.RandomGenerator;
 
 public class Customer extends Interactable {
 
+
+    private static final Map<String, Image> SATISFACTION_FACES = new HashMap<>();
+    static {
+        SATISFACTION_FACES.put("happy", new Image(Objects.requireNonNull(Customer.class.getResourceAsStream("happy_face.png"))));
+        SATISFACTION_FACES.put("mid", new Image(Objects.requireNonNull(Customer.class.getResourceAsStream("mid_face.png"))));
+        SATISFACTION_FACES.put("sad", new Image(Objects.requireNonNull(Customer.class.getResourceAsStream("sad_face.png"))));
+    }
+    private static final Map<String, Image> ORDER_BUBBLES = new HashMap<>();
+    static {
+        ORDER_BUBBLES.put("size_one", new Image(Objects.requireNonNull(Customer.class.getResourceAsStream("order_bubble_1.png"))));
+        ORDER_BUBBLES.put("size_two", new Image(Objects.requireNonNull(Customer.class.getResourceAsStream("order_bubble_2.png"))));
+        ORDER_BUBBLES.put("size_three", new Image(Objects.requireNonNull(Customer.class.getResourceAsStream("order_bubble_3.png"))));
+    }
     private static final Map<String, Image> INGREDIENT_ICONS = new HashMap<>();
     static {
         INGREDIENT_ICONS.put("hogroot", new Image(Objects.requireNonNull(Customer.class.getResourceAsStream("hogroot.png"))));
@@ -17,7 +30,10 @@ public class Customer extends Interactable {
     }
     private static final Map<String, Image> CUSTOMER_SPRITE_MAP = new HashMap<>();
     static {
-        CUSTOMER_SPRITE_MAP.put("idle", new Image(Objects.requireNonNull(Customer.class.getResourceAsStream("customer.png"))));
+        CUSTOMER_SPRITE_MAP.put("customer1", new Image(Objects.requireNonNull(Customer.class.getResourceAsStream("customer.png"))));
+        CUSTOMER_SPRITE_MAP.put("customer2", new Image(Objects.requireNonNull(Customer.class.getResourceAsStream("hobgoblin.png"))));
+        CUSTOMER_SPRITE_MAP.put("customer3", new Image(Objects.requireNonNull(Customer.class.getResourceAsStream("bow_tie_guy.png"))));
+        CUSTOMER_SPRITE_MAP.put("customer4", new Image(Objects.requireNonNull(Customer.class.getResourceAsStream("red_boy.png"))));
     }
     public final static int CUSTOMER_WIDTH = 150;
     public final static int CUSTOMER_HEIGHT = 50;
@@ -28,7 +44,6 @@ public class Customer extends Interactable {
 
     public final static int CUSTOMER_FINAL_POSITION_Y = -50;
     public final static int CUSTOMER_MAX_PATIENCE = 100;
-    public final static Color CUSTOMER_COLOR = Color.RED;
     private final static String[] CUSTOMER_INGREDIENT_TYPES = {"Hogroot", "Frostfern Leaves"};
 
     private double speed;
@@ -41,7 +56,8 @@ public class Customer extends Interactable {
     private ArrayList<Ingredient> order;
     private int customerLevel;
     private Text patienceText;
-
+    private boolean isFinished;
+    private double satisfactionLevel;
     private Image sprite;
 
 
@@ -54,18 +70,28 @@ public class Customer extends Interactable {
         this.height = CUSTOMER_HEIGHT;
         this.order = new ArrayList<>();
         this.customerLevel = customerLevel;
-        this.sprite =  CUSTOMER_SPRITE_MAP.get("idle");
+        this.sprite = getRandomSprite();
         this.isWaiting = false;
+        this.isFinished = false;
         this.patienceText = new Text();
+        this.satisfactionLevel = 0;
         generateOrder();
     }
 
     public void draw(GraphicsContext gc) {
         gc.setImageSmoothing(false);
         // TODO: rework these magic numbers
-        gc.drawImage(sprite, xPosition, yPosition , 75, 75);
+        gc.drawImage(sprite, xPosition, yPosition , 50, 50);
 
         if (this.isWaiting) {
+            if (order.size() == 2) {
+                gc.drawImage(ORDER_BUBBLES.get("size_one"), xPosition - 20, yPosition);
+            } else if (order.size() == 3) {
+                gc.drawImage(ORDER_BUBBLES.get("size_two"), xPosition - 20, yPosition);
+            } else if (order.size() == 4) {
+                gc.drawImage(ORDER_BUBBLES.get("size_three"), xPosition - 20, yPosition);
+            }
+
             double iconX = xPosition - 20; // Adjust this value based on your layout
             double iconY = yPosition;
 
@@ -81,11 +107,27 @@ public class Customer extends Interactable {
             }
         }
 
+        if (this.isFinished) {
+            if (satisfactionLevel >= 66) {
+                gc.drawImage(SATISFACTION_FACES.get("happy"), xPosition - 25, yPosition, 30, 30);
+            } else if (satisfactionLevel >= 33) {
+                gc.drawImage(SATISFACTION_FACES.get("mid"), xPosition - 25, yPosition, 30, 30);
+            } else {
+                gc.drawImage(SATISFACTION_FACES.get("sad"), xPosition + 50, yPosition, 30, 30);
+            }
+        }
+
         gc.fillText(patienceText.getText(), xPosition, yPosition + 50);
     }
 
     public void setText(final String text) {
         this.patienceText.setText(text);
+    }
+
+    public Image getRandomSprite() {
+        Random random = new Random();
+        int spriteIndex = random.nextInt(CUSTOMER_SPRITE_MAP.size());
+        return CUSTOMER_SPRITE_MAP.get("customer" + (spriteIndex + 1));
     }
 
     public void move(double delta, ArrayList<Customer> copyCustomers) {
@@ -113,6 +155,7 @@ public class Customer extends Interactable {
 
         } else if (!copyCustomers.contains(this) && this.yPosition > CUSTOMER_FINAL_POSITION_Y) {
             isWaiting = false;
+            this.isFinished = true;
             this.yPosition -= delta * speed;
             setText("");
         }
@@ -133,6 +176,7 @@ public class Customer extends Interactable {
             setText(String.format("%.2f", CUSTOMER_MAX_PATIENCE - this.patience));
         } else if (this.isWaiting && patience >= CUSTOMER_MAX_PATIENCE) {
             this.isWaiting = false;
+            this.isFinished = true;
             copyCustomers.remove(this);
             setText("");
             System.out.println("Customer left");
@@ -196,5 +240,9 @@ public class Customer extends Interactable {
 
     public double getHeight() {
         return height;
+    }
+
+    public void setSatisfactionLevel(double satisfactionLevel) {
+        this.satisfactionLevel = satisfactionLevel;
     }
 }
