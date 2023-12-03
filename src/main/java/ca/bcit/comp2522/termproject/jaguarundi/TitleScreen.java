@@ -99,7 +99,7 @@ public class TitleScreen {
     private List<String> readNamesFromFile(String fileName) {
         List<String> namesList = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(
-                TitleScreen.class.getResourceAsStream("/ee/ee/" + fileName), StandardCharsets.UTF_8))) {
+                TitleScreen.class.getResourceAsStream("/ca/bcit/comp2522/termproject/jaguarundi/" + fileName), StandardCharsets.UTF_8))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 // Skip empty lines
@@ -117,15 +117,22 @@ public class TitleScreen {
     private void appendNameToFile(String name, String fileName) {
         try {
             // Get the file path
-            URI uri = TitleScreen.class.getResource("/ee/ee/" + fileName).toURI();
+            URI uri = TitleScreen.class.getResource("/ca/bcit/comp2522/termproject/jaguarundi/" + fileName).toURI();
             Path path = Paths.get(uri);
 
-            // Append the entered name as a new line
-            Files.write(path, (name + System.lineSeparator()).getBytes(), StandardOpenOption.APPEND);
+            // Append the entered name as a new line, including a line separator
+            Files.write(
+                    path,
+                    (name + System.lineSeparator()).getBytes(StandardCharsets.UTF_8),
+                    StandardOpenOption.CREATE,  // Create the file if it does not exist
+                    StandardOpenOption.APPEND   // Append to the file
+            );
         } catch (IOException | URISyntaxException e) {
+            // Handle the exception appropriately, e.g., log it or throw a custom exception
             e.printStackTrace();
         }
     }
+
 
 
 }
