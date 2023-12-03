@@ -114,13 +114,6 @@ public class GameManager {
     public void registerKeyPress(KeyEvent event) {
         // Hand off key presses to the current level
         levels.get(currentLevelIndex).handleKeyPress(event);
-
-        KeyCode keyCode = event.getCode();
-        if (keyCode == KeyCode.K) {
-            currentLevelIndex = 0;
-        } else if (keyCode == KeyCode.L) {
-            currentLevelIndex = 1;
-        }
     }
 
     public void registerKeyRelease(KeyEvent event) {
@@ -142,8 +135,8 @@ public class GameManager {
         // Update inventory text
 //        inventoryText.setText(updateInventoryText());
 
-        // Update day and time remaining
-        nextDay(delta);
+
+
     }
 
     public void drawObjects(GraphicsContext gc) {
@@ -175,17 +168,8 @@ public class GameManager {
     }
 
     // TODO: remove day since it is redundant?
-    public void nextDay(double delta) {
-        if (timeRemaining > 0) {
-//            timeRemaining -= delta;
-        }  else if (day < 3) {
-            currentLevelIndex++;
-            day++;
-            timeRemaining = DAY_LENGTH;
-            System.out.println("Day: " + day);
-        } else {
-            System.out.println("The End");
-        }
+    public void advanceLevel() {
+        currentLevelIndex++;
     }
 
     public void incrementRubies(int rubies) {

@@ -1,11 +1,15 @@
 package ca.bcit.comp2522.termproject.jaguarundi;
+import javafx.animation.PauseTransition;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 
 public class Level {
+    public static final int TRANSITION_TIME = 5;
+
     private GameManager gameManager;
 
     private Player player;
@@ -15,8 +19,8 @@ public class Level {
     private ArrayList<IngredientBox> ingredientBoxes;
     private ArrayList<Customer> customers;
     private ArrayList<Wall> walls;
-
     private ArrayList<Customer> copyCustomers;
+    private double transitionTimer;
 
     public Level (GameManager gameManager, Player player, BottleBox bottleBox, TrashCan trashCan, ArrayList<Cauldron> cauldrons, ArrayList<IngredientBox> ingredientBoxes, ArrayList<Customer> customers, ArrayList<Wall> walls) {
         this.gameManager = gameManager;
@@ -28,6 +32,7 @@ public class Level {
         this.customers = customers;
         this.copyCustomers = new ArrayList<>(customers);
         this.walls = walls;
+        this.transitionTimer = 0;
     }
 
     public void initializeObjectPositions(
@@ -73,6 +78,10 @@ public class Level {
             customer.move(delta, copyCustomers);
             customer.incrementPatience(delta, copyCustomers);
         }
+
+        if (copyCustomers.isEmpty()) {
+            incrementTransitionTimer(delta);
+        }
     }
 
     public void drawLevel(GraphicsContext gc) {
@@ -91,6 +100,15 @@ public class Level {
         }
         trashCan.draw(gc);
         player.draw(gc);
+    }
+
+    public void incrementTransitionTimer(double delta) {
+        if (transitionTimer < TRANSITION_TIME) {
+            transitionTimer += delta;
+        } else {
+            transitionTimer = 0;
+            gameManager.advanceLevel();
+        }
     }
 
     public void handleKeyPress(KeyEvent event) {
