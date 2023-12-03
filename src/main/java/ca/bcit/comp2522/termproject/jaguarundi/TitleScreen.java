@@ -22,11 +22,13 @@ import java.util.Optional;
 public class TitleScreen {
 
     private GameApp gameApp;
+    private GameManager gameManager;
     private double buttonWidth = 200;
     private double buttonHeight = 40;
 
-    public TitleScreen(GameApp gameApp) {
+    public TitleScreen(GameApp gameApp, GameManager gameManager) {
         this.gameApp = gameApp;
+        this.gameManager = gameManager;
     }
 
     public void draw(GraphicsContext gc) {
@@ -84,6 +86,8 @@ public class TitleScreen {
             if (!name.isEmpty()) {
                 appendNameToFile(name, "saves.txt");
             }
+            gameManager.setCurrentLevelIndex(0);
+            gameApp.setGameStarted(true);
         });
     }
 

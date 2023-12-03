@@ -12,7 +12,7 @@ public class GameApp extends Application {
     private Canvas canvas;  // Define canvas as an instance variable
     private TitleScreen titleScreen;
     private GameManager gameManager;
-    private boolean isGameStarted = true;
+    private boolean isGameStarted = false;
 
     public static void main(String[] args) {
         launch(args);
@@ -32,8 +32,8 @@ public class GameApp extends Application {
         root.getChildren().add(canvas);
 
         // Initialize your game objects and set up your game loop here
-        titleScreen = new TitleScreen(this);
         gameManager = new GameManager();
+        titleScreen = new TitleScreen(this, gameManager);
 
         // Handle key events
         scene.setOnKeyPressed(event -> {

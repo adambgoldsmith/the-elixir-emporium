@@ -181,17 +181,9 @@ public class GameManager {
         inventoryText.setY(50);
     }
 
-//    // TODO: Refactor inventory text for efficiency and move to current level (or find work around)
-//    public String updateInventoryText() {
-//        Item currentInventory = player.getInventory();
-//        String text = "";
-//        if (currentInventory != null) {
-//            text += currentInventory.getClass().getSimpleName();
-//        } else {
-//            text += "Empty";
-//        }
-//        return text;
-//    }
+    public void setCurrentLevelIndex(int index) {
+        this.currentLevelIndex = index;
+    }
 
     public int getRubies() {
         return rubies;
