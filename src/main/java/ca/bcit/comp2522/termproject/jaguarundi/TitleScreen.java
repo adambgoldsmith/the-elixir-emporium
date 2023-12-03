@@ -72,19 +72,35 @@ public class TitleScreen {
     }
 
     private void handleStartButtonClick() {
-        List<String> namesList = readNamesFromFile("saves.txt");
-        // code goes here.
-        // read the names from saves.txt and add them to the namesList
-        Optional<String> result = SaveLoadDialog.showSaveLoadDialog(namesList);
+        Map<String, Integer> namesAndNumbers = readNamesFromFile("saves.txt");
+        Optional<String> result = SaveLoadDialog.showSaveLoadDialog(namesAndNumbers);
 
         // If the user entered a name, process it
         result.ifPresent(name -> {
             System.out.println("User entered name: " + name);
-            // Add logic to handle the entered name
-            if (!name.isEmpty()) {
-                appendNameToFile(name, "saves.txt");
+
+            // Check if the name is in the format *name*level
+            if (name.matches("\\*.*\\*\\d+")) {
+                String[] parts = name.split("\\*");
+                String enteredName = parts[1];
+                int level = Integer.parseInt(parts[2]);
+                System.out.println(Arrays.toString(parts));
+
+                // Add logic to handle the entered name and level
+                // (You might want to store the name and level in your game data)
+
+                gameManager.setCurrentLevelIndex(level-1);
+            } else {
+                // If the name is just a name with no *, append it to the file
+                if (!name.isEmpty()) {
+                    appendNameToFile(name, "saves.txt");
+                }
+
+                // Set the level index to 0
+                gameManager.setCurrentLevelIndex(0);
             }
-            gameManager.setCurrentLevelIndex(0);
+
+            // Set game started to true in both cases
             gameApp.setGameStarted(true);
         });
     }
@@ -94,22 +110,32 @@ public class TitleScreen {
         System.out.println("Quit button clicked");
     }
 
-    private List<String> readNamesFromFile(String fileName) {
-        List<String> namesList = new ArrayList<>();
+    private Map<String, Integer> readNamesFromFile(String fileName) {
+        Map<String, Integer> namesAndNumbers = new HashMap<>();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(
                 TitleScreen.class.getResourceAsStream("/ca/bcit/comp2522/termproject/jaguarundi/" + fileName), StandardCharsets.UTF_8))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 // Skip empty lines
                 if (!line.trim().isEmpty()) {
-                    namesList.add(line.trim());
+                    // Split the line into name and number using '=' as the delimiter
+                    String[] parts = line.split("=");
+                    if (parts.length == 2) {
+                        String name = parts[0].trim();
+                        int number = Integer.parseInt(parts[1].trim());
+                        namesAndNumbers.put(name, number);
+                    } else {
+                        // Handle lines that do not follow the expected format
+                        System.err.println("Invalid line format: " + line);
+                    }
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return namesList;
+        return namesAndNumbers;
     }
+
 
 
     private void appendNameToFile(String name, String fileName) {
@@ -121,7 +147,7 @@ public class TitleScreen {
             // Append the entered name as a new line, including a line separator
             Files.write(
                     path,
-                    (name + System.lineSeparator()).getBytes(StandardCharsets.UTF_8),
+                    (name + "=1" + System.lineSeparator()).getBytes(StandardCharsets.UTF_8),
                     StandardOpenOption.CREATE,  // Create the file if it does not exist
                     StandardOpenOption.APPEND   // Append to the file
             );
