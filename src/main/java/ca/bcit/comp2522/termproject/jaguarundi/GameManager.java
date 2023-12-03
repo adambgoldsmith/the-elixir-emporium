@@ -40,14 +40,14 @@ public class GameManager {
                 new Player(300, 400, 400),
                 new BottleBox(450, 250),
                 new TrashCan(500, 50),
-                createCauldrons(2),
+                createCauldrons(3),
                 createIngredientBoxes(),
                 createCustomers(),
                 createWalls()
         );
         level1.initializeObjectPositions(
-                new double[][]{{600, 150}, {300, 350}},
-                new double[][]{{200, 50}, {700, 450}},
+                new double[][]{{600, 150}, {300, 350}, {300, 150}},
+                new double[][]{{200, 50}, {700, 450}, {700, 50}},
                 new double[][]{{100, 550}, {100,550}, {100, 550}, {100,550}, {100, 550}},
                 new double[][]{{50, 0}, {0, 500}, {0, 0}, {750, 0}, {150, 50}}
         );
@@ -64,7 +64,7 @@ public class GameManager {
         );
         level2.initializeObjectPositions(
                 new double[][]{{600, 350}, {300, 150}, {300, 400}},
-                new double[][]{{700, 150}, {200, 300}},
+                new double[][]{{700, 150}, {200, 300}, {700, 450}},
                 new double[][]{{0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}},
                 new double[][]{{50, 0}, {0, 500}, {0, 0}, {750, 0}, {150, 50}}
         );
@@ -83,6 +83,7 @@ public class GameManager {
         ArrayList<IngredientBox> ingredientBoxes = new ArrayList<>();
         ingredientBoxes.add(new HogrootBox());
         ingredientBoxes.add(new FrostfernLeavesBox());
+        ingredientBoxes.add(new ScorchRadishBox());
         if (day == 2) {
             // Add new ingredient box
         }

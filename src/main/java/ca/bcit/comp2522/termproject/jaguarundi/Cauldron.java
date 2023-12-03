@@ -15,6 +15,7 @@ public class Cauldron extends Interactable implements Collidable {
         CAULDRON_SPRITE_MAP.put("hogroot", new Image(Objects.requireNonNull(Cauldron.class.getResourceAsStream("cauldron_hogroot.png"))));
         CAULDRON_SPRITE_MAP.put("frostfern", new Image(Objects.requireNonNull(Cauldron.class.getResourceAsStream("cauldron_frostfern_leaves.png"))));
         CAULDRON_SPRITE_MAP.put("scorch radish", new Image(Objects.requireNonNull(Cauldron.class.getResourceAsStream("cauldron_scorch_radish.png"))));
+        CAULDRON_SPRITE_MAP.put("cobalt compound", new Image(Objects.requireNonNull(Cauldron.class.getResourceAsStream("cauldron_cobalt_compound.png"))));
     }
     public final static int CAULDRON_WIDTH = 50;
     public final static int CAULDRON_HEIGHT = 50;
@@ -57,6 +58,8 @@ public class Cauldron extends Interactable implements Collidable {
                 this.sprite = CAULDRON_SPRITE_MAP.get("frostfern");
             } else if (ingredient.getClass() == ScorchRadish.class) {
                 this.sprite = CAULDRON_SPRITE_MAP.get("scorch radish");
+            } else if (ingredient.getClass() == CobaltCompound.class) {
+                this.sprite = CAULDRON_SPRITE_MAP.get("cobalt compound");
             }
         } else {
             this.sprite = CAULDRON_SPRITE_MAP.get("empty");

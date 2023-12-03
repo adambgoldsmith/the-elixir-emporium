@@ -17,6 +17,7 @@ public class Player {
         PLAYER_SPRITE_MAP.put("hogroot", new Image(Objects.requireNonNull(Player.class.getResourceAsStream("player_hogroot.png"))));
         PLAYER_SPRITE_MAP.put("frostfern", new Image(Objects.requireNonNull(Player.class.getResourceAsStream("player_frostfern_leaves.png"))));
         PLAYER_SPRITE_MAP.put("scorch radish", new Image(Objects.requireNonNull(Player.class.getResourceAsStream("player_scorch_radish.png"))));
+        PLAYER_SPRITE_MAP.put("cobalt compound", new Image(Objects.requireNonNull(Player.class.getResourceAsStream("player_cobalt_compound.png"))));
         PLAYER_SPRITE_MAP.put("empty_bottle", new Image(Objects.requireNonNull(Player.class.getResourceAsStream("player_empty_bottle.png"))));
         PLAYER_SPRITE_MAP.put("filled_bottle", new Image(Objects.requireNonNull(Player.class.getResourceAsStream("player_filled_bottle.png"))));
     }

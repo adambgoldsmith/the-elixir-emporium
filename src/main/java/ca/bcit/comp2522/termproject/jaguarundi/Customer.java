@@ -27,6 +27,8 @@ public class Customer extends Interactable {
     static {
         INGREDIENT_ICONS.put("hogroot", new Image(Objects.requireNonNull(Customer.class.getResourceAsStream("hogroot.png"))));
         INGREDIENT_ICONS.put("frostfern", new Image(Objects.requireNonNull(Customer.class.getResourceAsStream("frostfern_leaves.png"))));
+        INGREDIENT_ICONS.put("scorch radish", new Image(Objects.requireNonNull(Customer.class.getResourceAsStream("scorch_radish.png"))));
+        INGREDIENT_ICONS.put("cobalt compound", new Image(Objects.requireNonNull(Customer.class.getResourceAsStream("cobalt_compound.png"))));
     }
     private static final Map<String, Image> CUSTOMER_SPRITE_MAP = new HashMap<>();
     static {
@@ -44,7 +46,7 @@ public class Customer extends Interactable {
 
     public final static int CUSTOMER_FINAL_POSITION_Y = -50;
     public final static int CUSTOMER_MAX_PATIENCE = 100;
-    private final static String[] CUSTOMER_INGREDIENT_TYPES = {"Hogroot", "Frostfern Leaves"};
+    private final static String[] CUSTOMER_INGREDIENT_TYPES = {"Hogroot", "Frostfern Leaves", "Scorch Radish"};
 
     private double speed;
     private double patience;
@@ -100,6 +102,10 @@ public class Customer extends Interactable {
                     gc.drawImage(INGREDIENT_ICONS.get("hogroot"), iconX, iconY, 20, 20);
                 } else if (ingredient instanceof FrostfernLeaves) {
                     gc.drawImage(INGREDIENT_ICONS.get("frostfern"), iconX, iconY, 20, 20);
+                } else if (ingredient instanceof ScorchRadish) {
+                    gc.drawImage(INGREDIENT_ICONS.get("scorch radish"), iconX, iconY, 20, 20);
+                } else if (ingredient instanceof CobaltCompound) {
+                    gc.drawImage(INGREDIENT_ICONS.get("cobalt compound"), iconX, iconY, 20, 20);
                 }
 
                 // Adjust the position for the next icon
@@ -194,6 +200,8 @@ public class Customer extends Interactable {
                 order.add(new Hogroot());
             } else if (ingredientType.equals("Frostfern Leaves")) {
                 order.add(new FrostfernLeaves());
+            } else if (ingredientType.equals("Scorch Radish")) {
+                order.add(new ScorchRadish());
             }
         }
         System.out.println("Customer order: " + order);
