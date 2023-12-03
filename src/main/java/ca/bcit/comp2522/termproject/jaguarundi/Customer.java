@@ -113,11 +113,11 @@ public class Customer extends Interactable {
             } else if (satisfactionLevel >= 33) {
                 gc.drawImage(SATISFACTION_FACES.get("mid"), xPosition - 25, yPosition, 30, 30);
             } else {
-                gc.drawImage(SATISFACTION_FACES.get("sad"), xPosition + 50, yPosition, 30, 30);
+                gc.drawImage(SATISFACTION_FACES.get("sad"), xPosition - 25, yPosition, 30, 30);
             }
         }
 
-        gc.fillText(patienceText.getText(), xPosition, yPosition + 50);
+        gc.fillText(patienceText.getText(), xPosition, yPosition - 10);
     }
 
     public void setText(final String text) {
