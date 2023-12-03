@@ -41,8 +41,8 @@ public class GameManager {
                 new BottleBox(450, 250),
                 new TrashCan(500, 50),
                 createCauldrons(3),
-                createIngredientBoxes(),
-                createCustomers(),
+                createIngredientBoxes(1),
+                createCustomers(5, 1),
                 createWalls()
         );
         level1.initializeObjectPositions(
@@ -57,18 +57,35 @@ public class GameManager {
                 new Player(300, 400, 400),
                 new BottleBox(450, 250),
                 new TrashCan(200, 600),
-                createCauldrons(3),
-                createIngredientBoxes(),
-                createCustomers(),
+                createCauldrons(4),
+                createIngredientBoxes(2),
+                createCustomers(5, 2),
                 createWalls()
         );
         level2.initializeObjectPositions(
-                new double[][]{{600, 350}, {300, 150}, {300, 400}},
-                new double[][]{{700, 150}, {200, 300}, {700, 450}},
-                new double[][]{{0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}},
+                new double[][]{{600, 350}, {300, 150}, {300, 400}, {600, 150}},
+                new double[][]{{700, 150}, {700, 300}, {700, 450}, {700, 350}},
+                new double[][]{{100, 550}, {100,550}, {100, 550}, {100,550}, {100, 550}},
                 new double[][]{{50, 0}, {0, 500}, {0, 0}, {750, 0}, {150, 50}}
         );
         levels.add(level2);
+        Level level3 = new Level(
+                this,
+                new Player(300, 400, 400),
+                new BottleBox(450, 250),
+                new TrashCan(200, 600),
+                createCauldrons(5),
+                createIngredientBoxes(3),
+                createCustomers(5, 3),
+                createWalls()
+        );
+        level3.initializeObjectPositions(
+                new double[][]{{600, 350}, {300, 150}, {300, 400}, {600, 150}, {300, 350}},
+                new double[][]{{700, 350}, {700, 100}, {700, 450}, {700, 150}, {700, 50}},
+                new double[][]{{100, 550}, {100,550}, {100, 550}, {100,550}, {100, 550}},
+                new double[][]{{50, 0}, {0, 500}, {0, 0}, {750, 0}, {150, 50}}
+        );
+        levels.add(level3);
     }
 
     public ArrayList<Cauldron> createCauldrons(int quantity) {
@@ -79,25 +96,25 @@ public class GameManager {
         return cauldrons;
     }
 
-    public ArrayList<IngredientBox> createIngredientBoxes() {
+    public ArrayList<IngredientBox> createIngredientBoxes(int level) {
         ArrayList<IngredientBox> ingredientBoxes = new ArrayList<>();
         ingredientBoxes.add(new HogrootBox());
         ingredientBoxes.add(new FrostfernLeavesBox());
         ingredientBoxes.add(new ScorchRadishBox());
-        if (day == 2) {
-            // Add new ingredient box
+        if (level == 2) {
+            ingredientBoxes.add(new CobaltCompoundBox());
         }
-        if (day == 3) {
-            // Add new ingredient box
+        if (level == 3) {
+            ingredientBoxes.add(new FluorescentEggBox());
         }
         return ingredientBoxes;
     }
 
-    public ArrayList<Customer> createCustomers() {
+    public ArrayList<Customer> createCustomers(int quantity, int level) {
         ArrayList<Customer> customers = new ArrayList<>();
         // TODO: Add more customers
-        for (int i = 0; i < 5; i++) {
-            customers.add(new Customer(200, 50, 3));
+        for (int i = 0; i < quantity; i++) {
+            customers.add(new Customer(200, 50, level));
         }
         return customers;
     }

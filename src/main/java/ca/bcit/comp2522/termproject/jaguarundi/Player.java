@@ -18,6 +18,7 @@ public class Player {
         PLAYER_SPRITE_MAP.put("frostfern", new Image(Objects.requireNonNull(Player.class.getResourceAsStream("player_frostfern_leaves.png"))));
         PLAYER_SPRITE_MAP.put("scorch radish", new Image(Objects.requireNonNull(Player.class.getResourceAsStream("player_scorch_radish.png"))));
         PLAYER_SPRITE_MAP.put("cobalt compound", new Image(Objects.requireNonNull(Player.class.getResourceAsStream("player_cobalt_compound.png"))));
+        PLAYER_SPRITE_MAP.put("fluorescent egg", new Image(Objects.requireNonNull(Player.class.getResourceAsStream("player_fluorescent_egg.png"))));
         PLAYER_SPRITE_MAP.put("empty_bottle", new Image(Objects.requireNonNull(Player.class.getResourceAsStream("player_empty_bottle.png"))));
         PLAYER_SPRITE_MAP.put("filled_bottle", new Image(Objects.requireNonNull(Player.class.getResourceAsStream("player_filled_bottle.png"))));
     }
@@ -62,6 +63,10 @@ public class Player {
                 this.sprite = PLAYER_SPRITE_MAP.get("frostfern");
             } else if (this.inventory instanceof ScorchRadish) {
                 this.sprite = PLAYER_SPRITE_MAP.get("scorch radish");
+            } else if (this.inventory instanceof CobaltCompound) {
+                this.sprite = PLAYER_SPRITE_MAP.get("cobalt compound");
+            }  else if (this.inventory instanceof FluorescentEgg) {
+                this.sprite = PLAYER_SPRITE_MAP.get("fluorescent egg");
             }
         } else if (this.inventory != null && this.inventory instanceof Bottle bottle) {
             if (bottle.getIngredients().isEmpty()) {
@@ -173,6 +178,10 @@ public class Player {
                 this.inventory = new FrostfernLeaves();
             } else if (ingredientBox.getClass() == ScorchRadishBox.class) {
                 this.inventory = new ScorchRadish();
+            } else if (ingredientBox.getClass() == CobaltCompoundBox.class) {
+                this.inventory = new CobaltCompound();
+            } else if (ingredientBox.getClass() == FluorescentEggBox.class) {
+                this.inventory = new FluorescentEgg();
             } else {
                 System.out.println("Error: IngredientBox class not recognized");
             }

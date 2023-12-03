@@ -29,6 +29,7 @@ public class Customer extends Interactable {
         INGREDIENT_ICONS.put("frostfern", new Image(Objects.requireNonNull(Customer.class.getResourceAsStream("frostfern_leaves.png"))));
         INGREDIENT_ICONS.put("scorch radish", new Image(Objects.requireNonNull(Customer.class.getResourceAsStream("scorch_radish.png"))));
         INGREDIENT_ICONS.put("cobalt compound", new Image(Objects.requireNonNull(Customer.class.getResourceAsStream("cobalt_compound.png"))));
+        INGREDIENT_ICONS.put("fluorescent egg", new Image(Objects.requireNonNull(Customer.class.getResourceAsStream("fluorescent_egg.png"))));
     }
     private static final Map<String, Image> CUSTOMER_SPRITE_MAP = new HashMap<>();
     static {
@@ -46,7 +47,7 @@ public class Customer extends Interactable {
 
     public final static int CUSTOMER_FINAL_POSITION_Y = -50;
     public final static int CUSTOMER_MAX_PATIENCE = 100;
-    private final static String[] CUSTOMER_INGREDIENT_TYPES = {"Hogroot", "Frostfern Leaves", "Scorch Radish"};
+    private final static String[] CUSTOMER_INGREDIENT_TYPES = {"Hogroot", "Frostfern Leaves", "Scorch Radish", "Cobalt Compound", "Fluorescent Egg"};
 
     private double speed;
     private double patience;
@@ -106,6 +107,8 @@ public class Customer extends Interactable {
                     gc.drawImage(INGREDIENT_ICONS.get("scorch radish"), iconX, iconY, 20, 20);
                 } else if (ingredient instanceof CobaltCompound) {
                     gc.drawImage(INGREDIENT_ICONS.get("cobalt compound"), iconX, iconY, 20, 20);
+                } else if (ingredient instanceof FluorescentEgg) {
+                    gc.drawImage(INGREDIENT_ICONS.get("fluorescent egg"), iconX, iconY, 20, 20);
                 }
 
                 // Adjust the position for the next icon
@@ -189,12 +192,28 @@ public class Customer extends Interactable {
         }
     }
 
-    public void generateOrder(){
-        // number of ingredients should be between 2 and the customer level + 1
+    public void generateOrder() {
         Random random = new Random();
-        int numberOfIngredients = random.nextInt(customerLevel - 1) + 2;
+        int numberOfIngredients;
+
+        if (customerLevel == 3) {
+            numberOfIngredients = random.nextInt(5 - 2) + 2;
+        } else if (customerLevel == 2) {
+            numberOfIngredients = random.nextInt(4 - 2) + 2;
+        } else {
+            numberOfIngredients = random.nextInt(3 - 2) + 2;
+        }
+
         for (int i = 0; i < numberOfIngredients; i++) {
-            int ingredientIndex = random.nextInt(CUSTOMER_INGREDIENT_TYPES.length);
+            int ingredientIndex;
+            if (customerLevel == 3) {
+                ingredientIndex = random.nextInt(CUSTOMER_INGREDIENT_TYPES.length);
+            } else if (customerLevel == 2) {
+                ingredientIndex = random.nextInt(CUSTOMER_INGREDIENT_TYPES.length - 1);
+            } else {
+                ingredientIndex = random.nextInt(3);
+            }
+
             String ingredientType = CUSTOMER_INGREDIENT_TYPES[ingredientIndex];
             if (ingredientType.equals("Hogroot")) {
                 order.add(new Hogroot());
@@ -202,10 +221,16 @@ public class Customer extends Interactable {
                 order.add(new FrostfernLeaves());
             } else if (ingredientType.equals("Scorch Radish")) {
                 order.add(new ScorchRadish());
+            } else if (ingredientType.equals("Cobalt Compound")) {
+                order.add(new CobaltCompound());
+            } else if (ingredientType.equals("Fluorescent Egg")) {
+                order.add(new FluorescentEgg());
             }
         }
+
         System.out.println("Customer order: " + order);
     }
+
 
     public int calculateRubies(int correctCount) {
         int correctnessScore = correctCount * 100;
