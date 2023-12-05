@@ -24,6 +24,8 @@ public class GameManager {
     private double timeRemaining;
     private int day;
     private Text inventoryText;
+    private String currentUser;
+
 
     public GameManager() {
         this.levels = new ArrayList<>();
@@ -32,6 +34,7 @@ public class GameManager {
         this.timeRemaining = DAY_LENGTH;
         this.day = 0;
         this.inventoryText = new Text();
+        this.currentUser = "";
         generateLevels();
         initializeInventoryText();
     }
@@ -204,6 +207,9 @@ public class GameManager {
 
     public void setCurrentLevelIndex(int index) {
         this.currentLevelIndex = index;
+    }
+    public void setCurrentUser(String currentUser) {
+        this.currentUser = currentUser;
     }
 
     public int getRubies() {

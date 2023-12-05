@@ -39,6 +39,7 @@ public class TitleScreen {
         gc.setFill(Color.BLACK);
         gc.setFont(Font.font("Arial", FontWeight.BOLD, 40));
 
+
         // Start button
         gc.setFill(Color.MEDIUMPURPLE);
         gc.fillRect(100, 250, buttonWidth, buttonHeight);
@@ -92,14 +93,21 @@ public class TitleScreen {
                 // (You might want to store the name and level in your game data)
 
                 gameManager.setCurrentLevelIndex(level-1);
+                if (!name.isEmpty()) {
+                    gameManager.setCurrentUser(enteredName);
+                    System.out.println("Current user: " + enteredName);
+                }
             } else {
                 // If the name is just a name with no *, append it to the file
                 if (!name.isEmpty()) {
                     appendNameToFile(name, "saves.txt");
                 }
-
                 // Set the level index to 0
                 gameManager.setCurrentLevelIndex(0);
+                if (!name.isEmpty()) {
+                    gameManager.setCurrentUser(name);
+                    System.out.println("Current user: " + name);
+                }
             }
 
             // Set game started to true in both cases

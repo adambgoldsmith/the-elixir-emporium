@@ -6,6 +6,9 @@ import javafx.scene.input.KeyEvent;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
+import java.util.Objects;
+
+import static ca.bcit.comp2522.termproject.jaguarundi.SaveLoadDialog.updateSaveFile;
 
 public class Level {
     public static final int TRANSITION_TIME = 3;
@@ -87,32 +90,31 @@ public class Level {
     }
 
     public void drawLevel(GraphicsContext gc) {
-        for (Cauldron cauldron : cauldrons) {
-            cauldron.draw(gc);
-        }
+        for (Cauldron cauldron : cauldrons) cauldron.draw(gc);
         bottleBox.draw(gc);
-        for (IngredientBox ingredientBox : ingredientBoxes) {
-            ingredientBox.draw(gc);
-        }
-        for (Wall wall : walls) {
-            wall.draw(gc);
-        }
-        for (Customer customer : customers) {
-            customer.draw(gc);
-        }
+        for (IngredientBox ingredientBox : ingredientBoxes) ingredientBox.draw(gc);
+        for (Wall wall : walls) wall.draw(gc);
+        for (Customer customer : customers) customer.draw(gc);
         trashCan.draw(gc);
         player.draw(gc);
+
         if (levelCompleted) {
             gc.fillRect(275, 150, 400, 250);
             gc.setFill(javafx.scene.paint.Color.WHITE);
             gc.setFont(javafx.scene.text.Font.font("Arial", javafx.scene.text.FontWeight.BOLD, 40));
-            gc.fillText("Level Completed!", 307, 195);
+
+            String completionText = gameManager.getCurrentLevelIndex() < 2 ? "Level Completed!" : "You're a master potioneer!";
+            gc.fillText(completionText, 307, 195);
             gc.fillText("Rubies Earned:", 307, 270);
             gc.fillText("" + gameManager.getRubies(), 450, 340);
-            gc.setFont(javafx.scene.text.Font.font("Arial", javafx.scene.text.FontWeight.BOLD, 25));
-            gc.fillText("Press 'Enter' to continue", 325, 375);
+
+            if (gameManager.getCurrentLevelIndex() < 2) {
+                gc.setFont(javafx.scene.text.Font.font("Arial", javafx.scene.text.FontWeight.BOLD, 25));
+                gc.fillText("Press 'Enter' to continue", 325, 375);
+            }
         }
     }
+
 
     public void incrementTransitionTimer(double delta) {
         if (transitionTimer < TRANSITION_TIME) {
