@@ -8,7 +8,7 @@ import javafx.util.Duration;
 import java.util.ArrayList;
 
 public class Level {
-    public static final int TRANSITION_TIME = 5;
+    public static final int TRANSITION_TIME = 3;
 
     private GameManager gameManager;
 
@@ -123,21 +123,23 @@ public class Level {
     }
 
     public void handleKeyPress(KeyEvent event) {
-        KeyCode code = event.getCode();
-        // Handle key presses specific to this level
-        if (code == KeyCode.W) {
-            player.setYDirection(-1);
-        } else if (code == KeyCode.S) {
-            player.setYDirection(1);
-        }
-        if (code == KeyCode.A) {
-            player.setXDirection(-1);
-        } else if (code == KeyCode.D) {
-            player.setXDirection(1);
-        }
+        if (!levelCompleted) {
+            KeyCode code = event.getCode();
+            // Handle key presses specific to this level
+            if (code == KeyCode.W) {
+                player.setYDirection(-1);
+            } else if (code == KeyCode.S) {
+                player.setYDirection(1);
+            }
+            if (code == KeyCode.A) {
+                player.setXDirection(-1);
+            } else if (code == KeyCode.D) {
+                player.setXDirection(1);
+            }
 
-        if (code == KeyCode.E) {
-            handleInteractions(); // Handle interactions when the 'E' key is pressed
+            if (code == KeyCode.E) {
+                handleInteractions(); // Handle interactions when the 'E' key is pressed
+            }
         }
         else{
             if(event.getCode() == KeyCode.ENTER){
