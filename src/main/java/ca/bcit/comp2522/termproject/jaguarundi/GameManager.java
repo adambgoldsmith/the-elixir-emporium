@@ -210,6 +210,14 @@ public class GameManager {
         return rubies;
     }
 
+    public String getCurrentUser() {
+        return this.currentUser;
+    }
+
+    public int getCurrentLevelIndex() {
+        return this.currentLevelIndex;
+    }
+
     public double getTimeRemaining() {
         return timeRemaining;
     }

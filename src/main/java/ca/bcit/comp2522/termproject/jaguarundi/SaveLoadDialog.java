@@ -11,6 +11,36 @@ import java.util.Optional;
 
 public class SaveLoadDialog {
 
+    public static void updateSaveFile(String currentUser, int currentLevelIndex) {
+        try {
+            // Get the file path
+            URI uri = SaveLoadDialog.class.getResource("/ca/bcit/comp2522/termproject/jaguarundi/saves.txt").toURI();
+            Path savesFilePath = Paths.get(uri);
+
+            // Read all lines from the file
+            List<String> lines = Files.readAllLines(savesFilePath);
+            // Find and update the specified user's level
+            for (int i = 0; i < lines.size(); i++) {
+                String line = lines.get(i);
+                if (line.startsWith(currentUser + "=")) {
+                    lines.set(i, currentUser + "=" + (currentLevelIndex + 1));
+                    break;
+                }
+            }
+
+            Files.write(
+                    savesFilePath,
+                    lines,
+                    StandardCharsets.UTF_8,
+                    StandardOpenOption.CREATE,  // Create the file if it does not exist
+                    StandardOpenOption.TRUNCATE_EXISTING  // Truncate the file before writing
+            );
+        } catch (IOException | URISyntaxException e) {
+            // Handle the exception appropriately, e.g., log it or throw a custom exception
+            e.printStackTrace();
+        }
+    }
+
     public static Optional<String> showSaveLoadDialog(Map<String, Integer> previousSaves) {
         // Create a dialog
         Dialog<String> dialog = new Dialog<>();

@@ -142,8 +142,9 @@ public class Level {
             }
         }
         else{
-            if(event.getCode() == KeyCode.ENTER){
+            if(event.getCode() == KeyCode.ENTER && gameManager.getCurrentLevelIndex() < 2){
                 gameManager.advanceLevel();
+                updateSaveFile(gameManager.getCurrentUser(), gameManager.getCurrentLevelIndex());
             }
         }
     }
@@ -237,7 +238,6 @@ public class Level {
         gameManager.incrementRubies(customer.calculateRubies(correctCount));
         return correctCount > 0;
     }
-
 
     public Player getPlayer() {
         return player;
