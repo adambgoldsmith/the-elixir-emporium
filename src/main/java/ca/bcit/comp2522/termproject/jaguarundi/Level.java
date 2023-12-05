@@ -1,20 +1,25 @@
 package ca.bcit.comp2522.termproject.jaguarundi;
-import javafx.animation.PauseTransition;
+
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.util.Duration;
+import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-
+import java.util.Set;
+import java.util.stream.Collectors;
 import static ca.bcit.comp2522.termproject.jaguarundi.SaveLoadDialog.updateSaveFile;
 
 public class Level {
     public static final int TRANSITION_TIME = 3;
+    private static final int MAX_LEVEL_INDEX = 2;
+    public final static Image LEVEL_COMPLETE_BANNER = new Image(Objects.requireNonNull(Level.class.getResourceAsStream("level_complete.png")));
+    public final static Image GAME_COMPLETE_BANNER = new Image(Objects.requireNonNull(Level.class.getResourceAsStream("game_complete.png")));
 
     private GameManager gameManager;
-
     private Player player;
     private BottleBox bottleBox;
     private TrashCan trashCan;
@@ -99,22 +104,20 @@ public class Level {
         player.draw(gc);
 
         if (levelCompleted) {
-            gc.fillRect(275, 150, 400, 250);
-            gc.setFill(javafx.scene.paint.Color.WHITE);
-            gc.setFont(javafx.scene.text.Font.font("Arial", javafx.scene.text.FontWeight.BOLD, 40));
-
-            String completionText = gameManager.getCurrentLevelIndex() < 2 ? "Level Completed!" : "You're a master potioneer!";
-            gc.fillText(completionText, 307, 195);
-            gc.fillText("Rubies Earned:", 307, 270);
-            gc.fillText("" + gameManager.getRubies(), 450, 340);
-
-            if (gameManager.getCurrentLevelIndex() < 2) {
-                gc.setFont(javafx.scene.text.Font.font("Arial", javafx.scene.text.FontWeight.BOLD, 25));
-                gc.fillText("Press 'Enter' to continue", 325, 375);
+            if (gameManager.getCurrentLevelIndex() < MAX_LEVEL_INDEX) {
+                gc.drawImage(LEVEL_COMPLETE_BANNER, 250, 150);
+            } else {
+                gc.drawImage(GAME_COMPLETE_BANNER, 250, 150);
             }
+            gc.setFill(Color.BLACK);
+            gc.setFont(javafx.scene.text.Font.font("Baskerville Old Face", 30));
+            String rubiesText = String.valueOf(gameManager.getRubies());
+            double rubiesTextWidth = rubiesText.length() * 15;
+
+            double rubiesX = 450 - rubiesTextWidth / 2;
+            gc.fillText(rubiesText, rubiesX, 300);
         }
     }
-
 
     public void incrementTransitionTimer(double delta) {
         if (transitionTimer < TRANSITION_TIME) {
@@ -127,29 +130,34 @@ public class Level {
     public void handleKeyPress(KeyEvent event) {
         if (!levelCompleted) {
             KeyCode code = event.getCode();
-            // Handle key presses specific to this level
-            if (code == KeyCode.W) {
-                player.setYDirection(-1);
-            } else if (code == KeyCode.S) {
-                player.setYDirection(1);
-            }
-            if (code == KeyCode.A) {
-                player.setXDirection(-1);
-            } else if (code == KeyCode.D) {
-                player.setXDirection(1);
-            }
 
-            if (code == KeyCode.E) {
-                handleInteractions(); // Handle interactions when the 'E' key is pressed
+            switch (code) {
+                case W:
+                    player.setYDirection(-1);
+                    break;
+                case S:
+                    player.setYDirection(1);
+                    break;
+                case A:
+                    player.setXDirection(-1);
+                    break;
+                case D:
+                    player.setXDirection(1);
+                    break;
+                case E:
+                    handleInteractions();
+                    break;
+                default:
+                    break;
             }
-        }
-        else{
-            if(event.getCode() == KeyCode.ENTER && gameManager.getCurrentLevelIndex() < 2){
+        } else {
+            if (event.getCode() == KeyCode.ENTER && gameManager.getCurrentLevelIndex() < MAX_LEVEL_INDEX) {
                 gameManager.advanceLevel();
                 updateSaveFile(gameManager.getCurrentUser(), gameManager.getCurrentLevelIndex());
             }
         }
     }
+
 
     public void handleKeyRelease(KeyEvent event) {
         KeyCode code = event.getCode();
@@ -164,81 +172,80 @@ public class Level {
 
     private void handleInteractions() {
         for (IngredientBox ingredientBox : ingredientBoxes) {
-            if (player.isNearInteractable(ingredientBox)) {
-                player.handleIngredient(ingredientBox);
-            }
+            interactWithIngredientBox(ingredientBox);
         }
 
         for (Cauldron cauldron : cauldrons) {
-            if (player.isNearInteractable(cauldron)) {
-                // TODO: Refactor this logic into the Cauldron class/beautify it.
-                if (cauldron.getIngredient() == null &&
-                        player.getInventory() != null &&
-                        player.getInventory() instanceof Ingredient) {
-                    cauldron.addIngredient((Ingredient) player.getInventory());
-                    player.removeFromInventory();
-                } else if (cauldron.getIngredient() != null &&
-                        player.getInventory() != null &&
-                        player.getInventory().getClass() == Bottle.class &&
-                        cauldron.getIngredient().getStage() == 1) { // Change this?
-                    Bottle bottle = (Bottle) player.getInventory();
-                    bottle.addIngredient(cauldron.getIngredient());
-                    cauldron.removeIngredient();
-                }
-            }
+            interactWithCauldron(cauldron);
         }
 
         for (Customer customer : customers) {
-
-            if (customer.getPatience() >= 100) {
-                System.out.println("Customer has left. Skipping interaction.");
-                continue;
-            }
-            if (player.isNearInteractable(customer)) {
-                if (player.getInventory() != null && player.getInventory().getClass() == Bottle.class) {
-                    if (verifyOrder(customer)) {
-                        System.out.println("Correct order!");
-                        player.removeFromInventory();
-                    } else {
-                        System.out.println("Incorrect order!");
-                        player.removeFromInventory();
-                    }
-                    copyCustomers.remove(customer);
-                }
-            }
+            interactWithCustomer(customer);
         }
 
+        interactWithBottleBox();
+        interactWithTrashCan();
+    }
+
+    private void interactWithIngredientBox(IngredientBox ingredientBox) {
+        if (player.isNearInteractable(ingredientBox)) {
+            player.handleIngredient(ingredientBox);
+        }
+    }
+
+    private void interactWithCauldron(Cauldron cauldron) {
+        if (player.isNearInteractable(cauldron)) {
+            if (cauldron.getIngredient() == null && player.getInventory() instanceof Ingredient) {
+                cauldron.addIngredient((Ingredient) player.getInventory());
+                player.removeFromInventory();
+            } else if (cauldron.getIngredient() != null &&
+                    player.getInventory() instanceof Bottle &&
+                    cauldron.getIngredient().getStage() == 1) {
+                ((Bottle) player.getInventory()).addIngredient(cauldron.getIngredient());
+                cauldron.removeIngredient();
+            }
+        }
+    }
+
+    private void interactWithCustomer(Customer customer) {
+        if (customer.getPatience() < 100 && player.isNearInteractable(customer) && player.getInventory() instanceof Bottle) {
+            this.verifyOrder(customer);
+            player.removeFromInventory();
+            copyCustomers.remove(customer);
+        }
+    }
+
+
+    private void interactWithBottleBox() {
         if (player.isNearInteractable(bottleBox)) {
             player.handleBottle();
         }
-        if(player.isNearInteractable(trashCan)){
+    }
+
+    private void interactWithTrashCan() {
+        if (player.isNearInteractable(trashCan)) {
             player.removeFromInventory();
         }
     }
 
-    public boolean verifyOrder(Customer customer) {
+    public void verifyOrder(Customer customer) {
         Bottle playerBottle = (Bottle) player.getInventory();
-        ArrayList<Ingredient> playerOrder = playerBottle.getIngredients();
-        ArrayList<Ingredient> customerOrder = customer.getOrder();
+        List<Ingredient> playerOrder = playerBottle.getIngredients();
+        List<Ingredient> customerOrder = customer.getOrder();
         System.out.println(playerOrder);
         System.out.println(customerOrder);
 
+        Set<Class<? extends Ingredient>> uniquePlayerIngredients = playerOrder.stream()
+                .map(Ingredient::getClass)
+                .collect(Collectors.toSet());
 
-        int correctCount = 0;
+        long correctCount = customerOrder.stream()
+                .map(Ingredient::getClass)
+                .filter(uniquePlayerIngredients::contains)
+                .count();
 
-        // TODO: fix this so it only counts an ingredient once.
-        for (Ingredient playerIngredient : playerOrder) {
-            for (Ingredient customerIngredient : customerOrder) {
-                if (playerIngredient.getClass() == customerIngredient.getClass()) {
-                    correctCount++;
-                    break;
-                }
-            }
-        }
-
-        customer.setSatisfactionLevel(((double) correctCount / customerOrder.size()) * 100);
-        gameManager.incrementRubies(customer.calculateRubies(correctCount));
-        return correctCount > 0;
+        customer.setSatisfactionLevel((correctCount / (double) customerOrder.size()) * 100);
+        gameManager.incrementRubies(customer.calculateRubies((int) correctCount));
     }
 
     public Player getPlayer() {
