@@ -2,39 +2,29 @@ package ca.bcit.comp2522.termproject.jaguarundi;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
 
 public class GameManager {
-    private long lastUpdateTime = 0;
-
-    public static final int DAY_LENGTH = 60;
-
     private ArrayList<Level> levels;
     private int currentLevelIndex;
     private int rubies;
-    private double timeRemaining;
-    private int day;
     private Text inventoryText;
     private String currentUser;
-
+    private long lastUpdateTime;
 
     public GameManager() {
         this.levels = new ArrayList<>();
         this.currentLevelIndex = 0;
         this.rubies = 0;
-        this.timeRemaining = DAY_LENGTH;
-        this.day = 0;
         this.inventoryText = new Text();
         this.currentUser = "";
+        this.lastUpdateTime = 0;
         generateLevels();
         initializeInventoryText();
     }
@@ -144,7 +134,7 @@ public class GameManager {
         levels.get(currentLevelIndex).handleKeyRelease(event);
     }
 
-    public void update(double elapsedTime) {
+    public void update() {
         if (lastUpdateTime == 0) {
             lastUpdateTime = System.nanoTime();
         }
@@ -154,17 +144,11 @@ public class GameManager {
 
         // Call updateLevel of the current level
         levels.get(currentLevelIndex).updateLevel(delta);
-
-        // Update inventory text
-//        inventoryText.setText(updateInventoryText());
-
-
-
     }
 
     public void drawObjects(GraphicsContext gc) {
         // Draw side panel
-        gc.setFont(Font.font("Arial", FontWeight.BOLD, 10));
+        gc.setFont(Font.font("Baskerville Old Face", FontWeight.BOLD, 15));
         drawSidePanel(gc);
 
         // Call drawLevel of the current level
@@ -174,24 +158,26 @@ public class GameManager {
 
     // TODO: Create static variables to store the images for the side panel and the ruby. Split into atomic methods.
     public void drawSidePanel(GraphicsContext gc) {
-        gc.setImageSmoothing(false);
-        gc.drawImage(new Image(Objects.requireNonNull(GameManager.class.getResourceAsStream("sidebar.png"))), 800, 0, 200, 550);
         gc.setFill(Color.BLACK);
-        gc.drawImage(new Image(Objects.requireNonNull(GameManager.class.getResourceAsStream("ruby.png"))), 850, 75, 15, 31);
-        gc.fillText("" + rubies, 900, 100);
-        gc.fillText(String.format("%.2f", timeRemaining), 850, 125);
-        gc.fillText("Day: " + day, 850, 150);
+        gc.setTextAlign(javafx.scene.text.TextAlignment.CENTER);
+        gc.setImageSmoothing(false);
+        gc.drawImage(new Image(Objects.requireNonNull(GameManager.class.getResourceAsStream("sidebar_v2.png"))), 800, 0, 200, 550);
+        // draw rubies
+        gc.setFont(Font.font("Baskerville Old Face", FontWeight.BOLD, 30));
+        gc.fillText(String.valueOf(rubies), 915, 155);
+        // draw inventory item
+        gc.setFont(Font.font("Baskerville Old Face", FontWeight.BOLD, 15));
         Item currentInventory = levels.get(currentLevelIndex).getPlayer().getInventory();
-        gc.fillText("Inventory: ", 850, 200);
         if (currentInventory != null) {
-            gc.fillText(currentInventory.getClass().getSimpleName(), 850, 225);
+            gc.fillText(currentInventory.getClass().getSimpleName(), 900, 310);
         } else {
-            gc.fillText("Empty", 850, 225);
+            gc.fillText("Empty", 900, 310);
         }
-        gc.fillText("Current Order: ", 850, 300);
+        //draw current level
+        gc.setFont(Font.font("Baskerville Old Face", FontWeight.BOLD, 30));
+        gc.fillText(String.valueOf(currentLevelIndex + 1), 900, 450);
     }
 
-    // TODO: remove day since it is redundant?
     public void advanceLevel() {
         currentLevelIndex++;
     }
@@ -222,13 +208,5 @@ public class GameManager {
 
     public int getCurrentLevelIndex() {
         return this.currentLevelIndex;
-    }
-
-    public double getTimeRemaining() {
-        return timeRemaining;
-    }
-
-    public int getDay() {
-        return day;
     }
 }
