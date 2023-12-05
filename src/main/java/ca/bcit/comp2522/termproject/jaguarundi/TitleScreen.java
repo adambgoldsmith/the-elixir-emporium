@@ -1,6 +1,7 @@
 package ca.bcit.comp2522.termproject.jaguarundi;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -18,11 +19,12 @@ import java.nio.file.StandardOpenOption;
 import java.util.*;
 
 public class TitleScreen {
+    public final static Image TITLE_SCREEN_ART = new Image(Objects.requireNonNull(TitleScreen.class.getResourceAsStream("TitleScreenArt.png")));
 
     private GameApp gameApp;
     private GameManager gameManager;
-    private double buttonWidth = 200;
-    private double buttonHeight = 40;
+    private double buttonWidth = 300;
+    private double buttonHeight = 75;
 
     public TitleScreen(GameApp gameApp, GameManager gameManager) {
         this.gameApp = gameApp;
@@ -30,24 +32,24 @@ public class TitleScreen {
     }
 
     public void draw(GraphicsContext gc) {
-        // Draw the title and buttons (unchanged from the previous code)
+        // Draw the background image
+        gc.drawImage(TITLE_SCREEN_ART, 0, 0, 1000, 550);
+
+        // Set color and font
         gc.setFill(Color.BLACK);
         gc.setFont(Font.font("Arial", FontWeight.BOLD, 40));
-        gc.fillText("The Elixir Emporium", 250, 100);
 
         // Start button
-        gc.setFill(Color.LIGHTBLUE);
-        gc.fillRect(400, 200, buttonWidth, buttonHeight);
-        gc.setFill(Color.BLACK);
-        gc.fillText("Start", 480, 235);
+        gc.setFill(Color.MEDIUMPURPLE);
+        gc.fillRect(100, 250, buttonWidth, buttonHeight);
+        gc.setFill(Color.WHITE);
+        gc.fillText("Start", 140 + buttonWidth / 2 - gc.getFont().getSize() * 2, 265 + buttonHeight / 2);
 
         // Quit button
-        gc.setFill(Color.LIGHTBLUE);
-        gc.fillRect(400, 300, buttonWidth, buttonHeight);
-        gc.setFill(Color.BLACK);
-        gc.fillText("Quit", 480, 335);
-
-        gc.setFont(Font.font("Arial", FontWeight.BOLD, 10));
+        gc.setFill(Color.MEDIUMPURPLE);
+        gc.fillRect(100, 350, buttonWidth, buttonHeight);
+        gc.setFill(Color.WHITE);
+        gc.fillText("Quit", 140 + buttonWidth / 2 - gc.getFont().getSize() * 2, 365 + buttonHeight / 2);
     }
 
     public void update(MouseEvent mouseEvent) {
@@ -55,13 +57,13 @@ public class TitleScreen {
         double mouseY = mouseEvent.getY();
 
         // Check if the mouse is within the bounds of the Start button
-        if (isMouseInButton(mouseX, mouseY, 400, 200, buttonWidth, buttonHeight)) {
+        if (isMouseInButton(mouseX, mouseY, 100, 250, buttonWidth, buttonHeight)) {
             // Invoke Start button's method
             handleStartButtonClick();
         }
 
         // Check if the mouse is within the bounds of the Quit button
-        else if (isMouseInButton(mouseX, mouseY, 400, 300, buttonWidth, buttonHeight)) {
+        else if (isMouseInButton(mouseX, mouseY, 100, 350, buttonWidth, buttonHeight)) {
             // Invoke Quit button's method
             handleQuitButtonClick();
         }

@@ -5,6 +5,8 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 import java.util.ArrayList;
@@ -159,6 +161,7 @@ public class GameManager {
 
     public void drawObjects(GraphicsContext gc) {
         // Draw side panel
+        gc.setFont(Font.font("Arial", FontWeight.BOLD, 10));
         drawSidePanel(gc);
 
         // Call drawLevel of the current level
