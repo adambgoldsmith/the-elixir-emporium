@@ -61,11 +61,9 @@ public class GameApp extends Application {
                 lastUpdateTime = now;
             }
 
-            long elapsedTime = now - lastUpdateTime;
-
             // Update your game logic here and pass elapsed time to the GameManager
             if (isGameStarted) {
-                gameManager.update(elapsedTime / 1e9); // Convert nanoseconds to seconds
+                gameManager.update(); // Convert nanoseconds to seconds
             } else {
                 // add mouse event handler
                 canvas.setOnMouseClicked(mouseEvent -> {
