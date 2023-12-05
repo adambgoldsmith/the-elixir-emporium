@@ -168,6 +168,11 @@ public class Level {
         }
 
         for (Customer customer : customers) {
+
+            if (customer.getPatience() >= 100) {
+                System.out.println("Customer has left. Skipping interaction.");
+                continue;
+            }
             if (player.isNearInteractable(customer)) {
                 if (player.getInventory() != null && player.getInventory().getClass() == Bottle.class) {
                     if (verifyOrder(customer)) {
