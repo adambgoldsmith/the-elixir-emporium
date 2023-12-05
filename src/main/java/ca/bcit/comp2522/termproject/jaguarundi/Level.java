@@ -21,6 +21,7 @@ public class Level {
     private ArrayList<Wall> walls;
     private ArrayList<Customer> copyCustomers;
     private double transitionTimer;
+    private boolean levelCompleted ;
 
     public Level (GameManager gameManager, Player player, BottleBox bottleBox, TrashCan trashCan, ArrayList<Cauldron> cauldrons, ArrayList<IngredientBox> ingredientBoxes, ArrayList<Customer> customers, ArrayList<Wall> walls) {
         this.gameManager = gameManager;
@@ -33,6 +34,7 @@ public class Level {
         this.copyCustomers = new ArrayList<>(customers);
         this.walls = walls;
         this.transitionTimer = 0;
+        this.levelCompleted = false;
     }
 
     public void initializeObjectPositions(
@@ -100,14 +102,23 @@ public class Level {
         }
         trashCan.draw(gc);
         player.draw(gc);
+        if (levelCompleted) {
+            gc.fillRect(275, 150, 400, 250);
+            gc.setFill(javafx.scene.paint.Color.WHITE);
+            gc.setFont(javafx.scene.text.Font.font("Arial", javafx.scene.text.FontWeight.BOLD, 40));
+            gc.fillText("Level Completed!", 307, 195);
+            gc.fillText("Rubies Earned:", 307, 270);
+            gc.fillText("" + gameManager.getRubies(), 450, 340);
+            gc.setFont(javafx.scene.text.Font.font("Arial", javafx.scene.text.FontWeight.BOLD, 25));
+            gc.fillText("Press 'Enter' to continue", 325, 375);
+        }
     }
 
     public void incrementTransitionTimer(double delta) {
         if (transitionTimer < TRANSITION_TIME) {
             transitionTimer += delta;
         } else {
-            transitionTimer = 0;
-            gameManager.advanceLevel();
+            levelCompleted = true;
         }
     }
 
@@ -127,6 +138,11 @@ public class Level {
 
         if (code == KeyCode.E) {
             handleInteractions(); // Handle interactions when the 'E' key is pressed
+        }
+        else{
+            if(event.getCode() == KeyCode.ENTER){
+                gameManager.advanceLevel();
+            }
         }
     }
 
