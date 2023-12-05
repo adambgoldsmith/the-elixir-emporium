@@ -244,9 +244,16 @@ public class Level {
                 .filter(uniquePlayerIngredients::contains)
                 .count();
 
-        customer.setSatisfactionLevel((correctCount / (double) customerOrder.size()) * 100);
-        gameManager.incrementRubies(customer.calculateRubies((int) correctCount));
+        long extraIngredientsCount = Math.max(0, playerOrder.size() - customerOrder.size());
+
+        long adjustedCorrectCount = Math.max(0, correctCount - extraIngredientsCount);
+
+        double satisfactionLevel = (adjustedCorrectCount / (double) customerOrder.size()) * 100;
+        customer.setSatisfactionLevel(satisfactionLevel);
+
+        gameManager.incrementRubies(customer.calculateRubies((int) adjustedCorrectCount));
     }
+
 
     public Player getPlayer() {
         return player;
