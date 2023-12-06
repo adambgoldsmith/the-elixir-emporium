@@ -61,7 +61,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                ca.bcit.comp2522.termproject.jaguarundi/ca.bcit.comp2522.termproject.jaguarundi.HelloApplication
+                                ca.bcit.comp2522.termproject.jaguarundi/ca.bcit.comp2522.termproject.jaguarundi.systems.HelloApplication
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
