@@ -1,31 +1,30 @@
 package ca.bcit.comp2522.termproject.jaguarundi;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
+import java.util.Objects;
+
 public class BottleBox extends Interactable implements Collidable {
+    public final static Image BOTTLE_BOX_SPRITE = new Image(Objects.requireNonNull(BottleBox.class.getResourceAsStream("bottle_table.png")));
     public static final int BOTTLE_BOX_WIDTH = 50;
     public static final int BOTTLE_BOX_HEIGHT = 50;
-    public static final Color BOTTLE_BOX_COLOR = Color.BROWN;
 
     private final double xPosition;
     private final double yPosition;
     private final double width;
     private final double height;
-    private final Color color;
-
 
     public BottleBox(final int xPosition, final int yPosition) {
         this.xPosition = xPosition;
         this.yPosition = yPosition;
         this.width = BOTTLE_BOX_WIDTH;
         this.height = BOTTLE_BOX_HEIGHT;
-        this.color = BOTTLE_BOX_COLOR;
     }
 
-    public void draw(final GraphicsContext graphicsContext) {
-        graphicsContext.setFill(color);
-        graphicsContext.fillRect(xPosition, yPosition, width, height);
+    public void draw(final GraphicsContext gc) {
+        gc.drawImage(BOTTLE_BOX_SPRITE, xPosition, yPosition);
     }
 
     public double getXPosition() {
