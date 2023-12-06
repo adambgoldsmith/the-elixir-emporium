@@ -256,6 +256,9 @@ public class Level {
         }
         if (playerOrder.size() > customerOrder.size()) {
             correctCount -= playerOrder.size() - customerOrder.size();
+            if (correctCount < 0) {
+                correctCount = 0;
+            }
         }
 
         System.out.println(correctCount);
