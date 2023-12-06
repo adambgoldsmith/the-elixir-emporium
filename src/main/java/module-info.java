@@ -1,7 +1,7 @@
 module ca.bcit.comp2522.termproject.jaguarundi {
     requires javafx.controls;
     requires javafx.fxml;
-
+    requires javafx.media;
 
 
     exports ca.bcit.comp2522.termproject.jaguarundi.holdables;

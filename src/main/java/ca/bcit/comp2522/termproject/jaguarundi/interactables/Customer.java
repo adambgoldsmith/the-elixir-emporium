@@ -243,8 +243,8 @@ public class Customer extends Interactable {
         return order;
     }
 
-    public double getSpeed() {
-        return speed;
+    public double getSatisfactionLevel() {
+        return satisfactionLevel;
     }
 
     public double getPatience() {

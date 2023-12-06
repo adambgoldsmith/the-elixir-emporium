@@ -14,11 +14,9 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
+
+import static ca.bcit.comp2522.termproject.jaguarundi.systems.GameApp.playSound;
 import static ca.bcit.comp2522.termproject.jaguarundi.systems.SaveLoadDialog.updateSaveFile;
 
 public class Level {
@@ -198,6 +196,7 @@ public class Level {
     private void interactWithIngredientBox(IngredientBox ingredientBox) {
         if (player.isNearInteractable(ingredientBox)) {
             player.handleIngredient(ingredientBox);
+            playSound("item_pickup.wav");
         }
     }
 
@@ -206,11 +205,13 @@ public class Level {
             if (cauldron.getIngredient() == null && player.getInventory() instanceof Ingredient) {
                 cauldron.addIngredient((Ingredient) player.getInventory());
                 player.removeFromInventory();
+                playSound("add_to_cauldron.wav");
             } else if (cauldron.getIngredient() != null &&
                     player.getInventory() instanceof Bottle &&
                     cauldron.getIngredient().getStage() == 1) {
                 ((Bottle) player.getInventory()).addIngredient(cauldron.getIngredient());
                 cauldron.removeIngredient();
+                playSound("bottle_potion.wav");
             }
         }
     }
@@ -227,6 +228,7 @@ public class Level {
     private void interactWithBottleBox() {
         if (player.isNearInteractable(bottleBox)) {
             player.handleBottle();
+            playSound("item_pickup.wav");
         }
     }
 
@@ -236,32 +238,41 @@ public class Level {
         }
     }
 
-    public void verifyOrder(Customer customer) {
+    public boolean verifyOrder(Customer customer) {
         Bottle playerBottle = (Bottle) player.getInventory();
-        List<Ingredient> playerOrder = playerBottle.getIngredients();
-        List<Ingredient> customerOrder = customer.getOrder();
+        ArrayList<Ingredient> playerOrder = playerBottle.getIngredients();
+        ArrayList<Ingredient> customerOrder = customer.getOrder();
+        playerOrder.sort(Comparator.comparing(o -> o.getClass().getName()));
+        customerOrder.sort(Comparator.comparing(o -> o.getClass().getName()));
         System.out.println(playerOrder);
         System.out.println(customerOrder);
 
-        Set<Class<? extends Ingredient>> uniquePlayerIngredients = playerOrder.stream()
-                .map(Ingredient::getClass)
-                .collect(Collectors.toSet());
+        int correctCount = 0;
 
-        long correctCount = customerOrder.stream()
-                .map(Ingredient::getClass)
-                .filter(uniquePlayerIngredients::contains)
-                .count();
+        for (int i = 0; i < Math.min(playerOrder.size(), customerOrder.size()); i++) {
+            if (playerOrder.get(i).getClass() == customerOrder.get(i).getClass()) {
+                correctCount++;
+            }
+        }
+        if (playerOrder.size() > customerOrder.size()) {
+            correctCount -= playerOrder.size() - customerOrder.size();
+        }
 
-        long extraIngredientsCount = Math.max(0, playerOrder.size() - customerOrder.size());
+        System.out.println(correctCount);
 
-        long adjustedCorrectCount = Math.max(0, correctCount - extraIngredientsCount);
+        customer.setSatisfactionLevel(((double) correctCount / customerOrder.size()) * 100);
+        gameManager.incrementRubies(customer.calculateRubies(correctCount));
 
-        double satisfactionLevel = (adjustedCorrectCount / (double) customerOrder.size()) * 100;
-        customer.setSatisfactionLevel(satisfactionLevel);
-
-        gameManager.incrementRubies(customer.calculateRubies((int) adjustedCorrectCount));
+        double satisfactionLevel = customer.getSatisfactionLevel();
+        if (satisfactionLevel >= 66) {
+            playSound("order_good.wav");
+        } else if (satisfactionLevel >= 33) {
+            playSound("order_mid.wav");
+        } else {
+            playSound("order_bad.wav");
+        }
+        return true;
     }
-
 
     public Player getPlayer() {
         return player;
