@@ -47,6 +47,7 @@ public class Customer extends Interactable {
 
     public final static int CUSTOMER_FINAL_POSITION_Y = -50;
     public final static int CUSTOMER_MAX_PATIENCE = 100;
+    public final static int PATIENCE_TEST_OFFSET = 30;
     private final static String[] CUSTOMER_INGREDIENT_TYPES = {"Hogroot", "Frostfern Leaves", "Scorch Radish", "Cobalt Compound", "Fluorescent Egg"};
 
     private double speed;
@@ -126,7 +127,7 @@ public class Customer extends Interactable {
             }
         }
 
-        gc.fillText(patienceText.getText(), xPosition, yPosition - 10);
+        gc.fillText(patienceText.getText(), (xPosition + width / 2) - 50, (yPosition + height / 2) - PATIENCE_TEST_OFFSET);
     }
 
     public void setText(final String text) {
@@ -179,10 +180,10 @@ public class Customer extends Interactable {
         };
     }
 
-    public void incrementPatience(double delta, ArrayList<Customer> copyCustomers){
+    public void incrementPatience(double delta, ArrayList<Customer> copyCustomers) {
         if (this.isWaiting && patience < CUSTOMER_MAX_PATIENCE) {
             patience += delta;
-            setText(String.format("%.2f", CUSTOMER_MAX_PATIENCE - this.patience));
+            setText(String.valueOf((int) (CUSTOMER_MAX_PATIENCE - this.patience)));
         } else if (this.isWaiting && patience >= CUSTOMER_MAX_PATIENCE) {
             this.isWaiting = false;
             this.isFinished = true;

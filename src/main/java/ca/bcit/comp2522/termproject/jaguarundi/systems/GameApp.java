@@ -1,8 +1,6 @@
 package ca.bcit.comp2522.termproject.jaguarundi.systems;
 
 import javafx.animation.AnimationTimer;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -11,7 +9,6 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javafx.util.Duration;
 
 import java.util.Objects;
 

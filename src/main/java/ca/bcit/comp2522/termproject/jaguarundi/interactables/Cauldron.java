@@ -24,7 +24,7 @@ public class Cauldron extends Interactable implements Collidable {
     public final static int CAULDRON_WIDTH = 50;
     public final static int CAULDRON_HEIGHT = 50;
     public final static double BOIL_TIME = 5.0;
-    public final static double CAULDRON_TEXT_Y_OFFSET = 20.0;
+    public final static double CAULDRON_TEXT_Y_OFFSET = 50.0;
 
     private double xPosition;
     private double yPosition;
@@ -50,8 +50,10 @@ public class Cauldron extends Interactable implements Collidable {
 
     public void draw(GraphicsContext gc) {
         gc.setImageSmoothing(false);
+        gc.setFont(javafx.scene.text.Font.font("Baskerville Old Face", 20));
+        gc.setTextAlign(javafx.scene.text.TextAlignment.CENTER);
         gc.drawImage(sprite, xPosition, yPosition, width, height);
-        gc.fillText(text.getText(), xPosition + width / 2 - text.getLayoutBounds().getWidth() / 2, yPosition + height + CAULDRON_TEXT_Y_OFFSET);
+        gc.fillText(text.getText(), xPosition + width / 2 , yPosition + height / 2 + CAULDRON_TEXT_Y_OFFSET);
     }
 
     public void animate() {
@@ -92,17 +94,16 @@ public class Cauldron extends Interactable implements Collidable {
     public void boil(double delta) {
         if (this.isBoiling && this.timer < BOIL_TIME) {
             this.timer += delta;
-            // set text to boil time remaining
-            setText(String.format("%.1f", BOIL_TIME - this.timer));
+            setText(String.valueOf((int) (BOIL_TIME - this.timer)));
         } else if (this.isBoiling && this.timer >= BOIL_TIME) {
             this.isBoiling = false;
             this.timer = 0.0;
             System.out.println("Finished boiling cauldron");
             setText("Ready!");
-            // create an increment method in Ingredient?
             this.ingredient.setStage(this.ingredient.getStage() + 1);
         }
     }
+
 
     public void removeIngredient() {
         this.ingredient = null;
