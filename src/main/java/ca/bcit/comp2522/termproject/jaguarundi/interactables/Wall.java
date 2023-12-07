@@ -8,7 +8,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Wall class for players to collide with.
+ *
+ * @Author Adam , Vivian
+ * @version 2023
+ */
 public class Wall implements Collidable {
+
+    /**
+     * Wall sprite map.
+     */
     private static final Map<String, Image> WALL_SPRITE_MAP = new HashMap<>();
     static {
         WALL_SPRITE_MAP.put("top", new Image(Objects.requireNonNull(Wall.class.getResourceAsStream("wall_top.png"))));
@@ -23,6 +33,13 @@ public class Wall implements Collidable {
     private final double height;
     private final String wallType;
 
+    /**
+     * Constructs a Wall object.
+     *
+     * @param width the width
+     * @param height the height
+     * @param wallType the wall type
+     */
     public Wall(final int width, final int height, final String wallType) {
         this.xPosition = 0;
         this.yPosition = 0;
@@ -31,6 +48,11 @@ public class Wall implements Collidable {
         this.wallType = wallType;
     }
 
+    /**
+     * Draws the Wall.
+     *
+     * @param gc the graphics context
+     */
     public void draw(GraphicsContext gc) {
         switch (this.wallType) {
             case "top" -> {
@@ -57,26 +79,56 @@ public class Wall implements Collidable {
 
     }
 
+    /**
+     * Gets the x position.
+     *
+     * @return the x position
+     */
     public double getXPosition() {
         return xPosition;
     }
 
+    /**
+     * Gets the y position.
+     *
+     * @return the y position
+     */
     public double getYPosition() {
         return yPosition;
     }
 
+    /**
+     * Sets the x position.
+     *
+     * @param xPosition the x position
+     */
     public void setXPosition(double xPosition) {
         this.xPosition = xPosition;
     }
 
+    /**
+     * Sets the y position.
+     *
+     * @param yPosition the y position
+     */
     public void setYPosition(double yPosition) {
         this.yPosition = yPosition;
     }
 
+    /**
+     * Gets the width.
+     *
+     * @return the width
+     */
     public double getWidth() {
         return width;
     }
 
+    /**
+     * Gets the height.
+     *
+     * @return the height
+     */
     public double getHeight() {
         return height;
     }
