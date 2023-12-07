@@ -12,7 +12,6 @@ import javafx.scene.media.MediaPlayer;
 
 import java.util.Objects;
 
-
 public class GameApp extends Application {
     private static MediaPlayer mediaPlayer;
     private static MediaPlayer backgroundMusicPlayer;

@@ -168,6 +168,7 @@ public class GameManager {
         // Draw side panel
         gc.setFont(Font.font("Baskerville Old Face", FontWeight.BOLD, 15));
         drawSidePanel(gc);
+        gc.drawImage(new Image(Objects.requireNonNull(GameManager.class.getResourceAsStream("floorboards_v3.png"))), 0, 0, 800, 550);
 
         // Call drawLevel of the current level
         gc.setFill(Color.BLACK);
