@@ -4,6 +4,7 @@ import ca.bcit.comp2522.termproject.jaguarundi.systems.Interactable;
 import ca.bcit.comp2522.termproject.jaguarundi.holdables.*;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 import java.util.*;
@@ -129,7 +130,7 @@ public class Customer extends Interactable {
                 gc.drawImage(SATISFACTION_FACES.get("sad"), xPosition - 25, yPosition, 30, 30);
             }
         }
-
+        gc.setFont(javafx.scene.text.Font.font("Baskerville Old Face", FontWeight.BOLD, 20));
         gc.fillText(patienceText.getText(), (xPosition + width / 2) - 50, (yPosition + height / 2) - PATIENCE_TEST_OFFSET);
     }
 
