@@ -44,7 +44,7 @@ public class GameManager {
                 createCauldrons(3),
                 createIngredientBoxes(1),
                 createCustomers(5, 1),
-                createWalls()
+                createWalls(0)
         );
         level1.initializeObjectPositions(
                 new double[][]{{600, 150}, {300, 350}, {300, 150}},
@@ -56,35 +56,42 @@ public class GameManager {
         Level level2 = new Level(
                 this,
                 new Player(300, 400, 400),
-                new BottleBox(450, 250),
-                new TrashCan(200, 600),
+                new BottleBox(200, 50),
+                new TrashCan(700, 50),
                 createCauldrons(4),
                 createIngredientBoxes(2),
                 createCustomers(5, 2),
-                createWalls()
+                createWalls(9)
         );
         level2.initializeObjectPositions(
-                new double[][]{{600, 350}, {300, 150}, {300, 400}, {600, 150}},
-                new double[][]{{700, 150}, {700, 300}, {700, 450}, {700, 350}},
+                new double[][]{{400, 150}, {400, 350}, {300, 250}, {500, 250}},
+                new double[][]{{350, 50}, {700, 250}, {700, 350}, {300, 450}},
                 new double[][]{{100, 550}, {100,550}, {100, 550}, {100,550}, {100, 550}},
-                new double[][]{{50, 0}, {0, 500}, {0, 0}, {750, 0}, {150, 50}}
+                new double[][]{{50, 0}, {0, 500}, {0, 0}, {750, 0}, {150, 50,},
+                        {300, 50}, {300, 100}, {350, 100}, {400, 100}, {450, 100},
+                        {600, 300}, {600, 350}, {650, 300}, {700, 300}}
         );
         levels.add(level2);
         Level level3 = new Level(
                 this,
                 new Player(300, 400, 400),
-                new BottleBox(450, 250),
-                new TrashCan(200, 600),
+                new BottleBox(700, 50),
+                new TrashCan(650, 300),
                 createCauldrons(5),
                 createIngredientBoxes(3),
                 createCustomers(5, 3),
-                createWalls()
+                createWalls(17)
         );
         level3.initializeObjectPositions(
-                new double[][]{{600, 350}, {300, 150}, {300, 400}, {600, 150}, {300, 350}},
-                new double[][]{{700, 350}, {700, 100}, {700, 450}, {700, 150}, {700, 50}},
+                new double[][]{{300, 150}, {400, 50}, {450, 200}, {500, 50}, {600, 150}},
+                new double[][]{{200, 50}, {300, 450}, {400, 450}, {700, 450}, {550, 300}},
                 new double[][]{{100, 550}, {100,550}, {100, 550}, {100,550}, {100, 550}},
-                new double[][]{{50, 0}, {0, 500}, {0, 0}, {750, 0}, {150, 50}}
+                new double[][]{{50, 0}, {0, 500}, {0, 0}, {750, 0}, {150, 50},
+                        {250, 50}, {250, 100}, {250, 150},
+                        {450, 50}, {450, 100}, {450, 150},
+                        {350, 400}, {350, 450},
+                        {650, 50}, {650, 100}, {650, 150}, {650, 200}, {650, 250},
+                        {600, 250}, {600, 300}, {600, 350}, {550, 350}}
         );
         levels.add(level3);
     }
@@ -106,6 +113,7 @@ public class GameManager {
             ingredientBoxes.add(new CobaltCompoundBox());
         }
         if (level == 3) {
+            ingredientBoxes.add(new CobaltCompoundBox());
             ingredientBoxes.add(new FluorescentEggBox());
         }
         return ingredientBoxes;
@@ -120,13 +128,17 @@ public class GameManager {
         return customers;
     }
 
-    public ArrayList<Wall> createWalls() {
+    public ArrayList<Wall> createWalls(int quantity) {
         ArrayList<Wall> walls = new ArrayList<>();
         walls.add(new Wall(700, 50, "top"));
         walls.add(new Wall(800, 50, "bottom"));
         walls.add(new Wall(50, 500, "side"));
         walls.add(new Wall(50, 500, "side"));
         walls.add(new Wall(50, 450, "counter"));
+
+        for (int i = 0; i < quantity; i++) {
+            walls.add(new Wall(50, 50, "side"));
+        }
         return walls;
     }
 
