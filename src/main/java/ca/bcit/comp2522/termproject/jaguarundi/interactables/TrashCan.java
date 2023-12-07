@@ -1,11 +1,11 @@
 package ca.bcit.comp2522.termproject.jaguarundi.interactables;
 
-import ca.bcit.comp2522.termproject.jaguarundi.systems.Collidable;
+import ca.bcit.comp2522.termproject.jaguarundi.boxes.BottleBox;
 import ca.bcit.comp2522.termproject.jaguarundi.systems.Interactable;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
+import javafx.scene.image.Image;
 
-
+import java.util.Objects;
 
 public class TrashCan extends Interactable implements Collidable {
     public static final int TRASH_BOX_WIDTH = 50;
@@ -25,10 +25,7 @@ public class TrashCan extends Interactable implements Collidable {
         this.height = TRASH_BOX_HEIGHT;
     }
 
-    public void draw(final GraphicsContext gc) {
-        gc.setFill(BOTTLE_BOX_COLOR);
-        gc.fillRect(xPosition, yPosition, width, height);
-    }
+    public void draw(final GraphicsContext gc) {gc.drawImage(TRASHCAN_SPRITE, xPosition, yPosition);}
 
     public double getXPosition() {
         return xPosition;

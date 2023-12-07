@@ -37,6 +37,8 @@ public class Customer extends Interactable {
         CUSTOMER_SPRITE_MAP.put("customer2", new Image(Objects.requireNonNull(Customer.class.getResourceAsStream("hobgoblin.png"))));
         CUSTOMER_SPRITE_MAP.put("customer3", new Image(Objects.requireNonNull(Customer.class.getResourceAsStream("bow_tie_guy.png"))));
         CUSTOMER_SPRITE_MAP.put("customer4", new Image(Objects.requireNonNull(Customer.class.getResourceAsStream("red_boy.png"))));
+        CUSTOMER_SPRITE_MAP.put("customer5", new Image(Objects.requireNonNull(Customer.class.getResourceAsStream("dark_mage.png"))));
+        CUSTOMER_SPRITE_MAP.put("customer6", new Image(Objects.requireNonNull(Customer.class.getResourceAsStream("scientist.png"))));
     }
     public final static int CUSTOMER_WIDTH = 150;
     public final static int CUSTOMER_HEIGHT = 50;

@@ -77,7 +77,6 @@ public class Level {
         // Update the game objects using delta time
         player.move(delta);
         player.animate();
-        player.isCollidingWithCollidable(trashCan);
         for (IngredientBox ingredientBox : ingredientBoxes) {
             player.isCollidingWithCollidable(ingredientBox);
         }

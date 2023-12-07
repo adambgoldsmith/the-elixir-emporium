@@ -35,16 +35,16 @@ public class TitleScreen {
 
         // Set color and font
         gc.setFill(Color.BLACK);
-        gc.setFont(Font.font("Arial", FontWeight.BOLD, 40));
+        gc.setFont(Font.font("Baskerville Old Face", FontWeight.BOLD, 40));
 
         // Start button
-        gc.setFill(Color.MEDIUMPURPLE);
+        gc.setFill(Color.PURPLE);
         gc.fillRect(100, 250, BUTTON_WIDTH, BUTTON_HEIGHT);
         gc.setFill(Color.WHITE);
         gc.fillText("Start", 140 + BUTTON_WIDTH / 2 - gc.getFont().getSize() * 2, 265 + BUTTON_HEIGHT / 2);
 
         // Quit button
-        gc.setFill(Color.MEDIUMPURPLE);
+        gc.setFill(Color.PURPLE);
         gc.fillRect(100, 350, BUTTON_WIDTH, BUTTON_HEIGHT);
         gc.setFill(Color.WHITE);
         gc.fillText("Quit", 140 + BUTTON_WIDTH / 2 - gc.getFont().getSize() * 2, 365 + BUTTON_HEIGHT / 2);
