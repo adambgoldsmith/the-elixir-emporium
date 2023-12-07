@@ -132,4 +132,8 @@ public class GameApp extends Application {
     public void setGameStarted(boolean isGameStarted) {
         this.isGameStarted = isGameStarted;
     }
+
+    public boolean getIsGameStarted() {
+        return isGameStarted;
+    }
 }
