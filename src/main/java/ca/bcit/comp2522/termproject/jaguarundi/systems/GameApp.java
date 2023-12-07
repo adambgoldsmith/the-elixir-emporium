@@ -12,8 +12,21 @@ import javafx.scene.media.MediaPlayer;
 
 import java.util.Objects;
 
+/**
+ * GameApp Class to drive the game loop.
+ *
+ * @author Vivian , Adam
+ * @version 2023
+ */
 public class GameApp extends Application {
+    /**
+     * Media player.
+     */
     private static MediaPlayer mediaPlayer;
+
+    /**
+     * Background music player.
+     */
     private static MediaPlayer backgroundMusicPlayer;
 
     private Canvas canvas;
@@ -21,28 +34,34 @@ public class GameApp extends Application {
     private GameManager gameManager;
     private boolean isGameStarted = false;
 
+    /**
+     * Main method.
+     *
+     * @param args command line arguments
+     */
     public static void main(String[] args) {
         launch(args);
     }
 
+    /**
+     * Starts the game.
+     *
+     * @param primaryStage the stage
+     */
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("The Elixir Emporium");
 
-        // Create a root pane
         Pane root = new Pane();
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
 
-        // Create a canvas to render your game
-        canvas = new Canvas(1000, 550); // Set your preferred dimensions
+        canvas = new Canvas(1000, 550);
         root.getChildren().add(canvas);
 
-        // Initialize your game objects and set up your game loop here
         gameManager = new GameManager();
         titleScreen = new TitleScreen(this, gameManager);
 
-        // Handle key events
         scene.setOnKeyPressed(event -> {
             gameManager.registerKeyPress(event);
         });
@@ -53,38 +72,44 @@ public class GameApp extends Application {
 
         primaryStage.show();
 
-        // Start the game loop
         GameLoop gameLoop = new GameLoop();
         gameLoop.start();
 
         playBackgroundMusic();
     }
 
+    /**
+     * Game loop class.
+     *
+     * @author Vivian , Adam
+     * @version 2023
+     */
     private class GameLoop extends AnimationTimer {
 
         private long lastUpdateTime = 0;
 
+        /**
+         * Handles the game loop.
+         *
+         * @param now the current time
+         */
         @Override
         public void handle(long now) {
             if (lastUpdateTime == 0) {
                 lastUpdateTime = now;
             }
 
-            // Update your game logic here and pass elapsed time to the GameManager
             if (isGameStarted) {
-                gameManager.update(); // Convert nanoseconds to seconds
+                gameManager.update();
             } else {
-                // add mouse event handler
                 canvas.setOnMouseClicked(mouseEvent -> {
                     titleScreen.update(mouseEvent);
                 });
             }
 
-            // Clear the canvas
             GraphicsContext gc = canvas.getGraphicsContext2D();
             gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-            // Draw game objects
             if (isGameStarted) {
                 gameManager.drawObjects(gc);
             } else {
@@ -95,6 +120,11 @@ public class GameApp extends Application {
         }
     }
 
+    /**
+     * Plays a sound.
+     *
+     * @param soundFileName the sound file name
+     */
     public static void playSound(String soundFileName) {
         String soundFile = Objects.requireNonNull(GameApp.class.getResource(soundFileName)).toExternalForm();
         Media sound = new Media(soundFile);
@@ -104,31 +134,30 @@ public class GameApp extends Application {
         mediaPlayer.play();
     }
 
+    /**
+     * Plays background music.
+     */
     private static void playBackgroundMusic() {
-        // Load the background music file
         String musicFile = Objects.requireNonNull(GameApp.class.getResource("diminished_chords.mp3")).toExternalForm();
         Media backgroundMusic = new Media(musicFile);
 
-        // Create a media player for the background music
         backgroundMusicPlayer = new MediaPlayer(backgroundMusic);
 
-        // Set the music to loop indefinitely
         backgroundMusicPlayer.setCycleCount(MediaPlayer.INDEFINITE);
 
-        // Play the background music
         backgroundMusicPlayer.play();
     }
 
-    public static void stopSound() {
-        if (mediaPlayer != null) {
-            mediaPlayer.stop();
-        }
-    }
-
+    /**
+     * Set the game state.
+     */
     public void setGameStarted(boolean isGameStarted) {
         this.isGameStarted = isGameStarted;
     }
 
+    /**
+     * Get the game state.
+     */
     public boolean getIsGameStarted() {
         return isGameStarted;
     }
