@@ -9,9 +9,19 @@ import java.util.Map;
 
 import java.util.Objects;
 
+/**
+ * Player class that represents the player.
+ *
+ * @author Vivian , Adam
+ * @version 2023
+ */
 public class Player {
-    // TODO: Add all sprites to a map
+
+    /**
+     * Map of player sprites.
+     */
     private static final Map<String, Image> PLAYER_SPRITE_MAP = new HashMap<>();
+
     static {
         PLAYER_SPRITE_MAP.put("idle", new Image(Objects.requireNonNull(Player.class.getResourceAsStream("player.png"))));
         PLAYER_SPRITE_MAP.put("idle_back", new Image(Objects.requireNonNull(Player.class.getResourceAsStream("player_back.png"))));
@@ -24,7 +34,15 @@ public class Player {
         PLAYER_SPRITE_MAP.put("empty_bottle", new Image(Objects.requireNonNull(Player.class.getResourceAsStream("player_empty_bottle.png"))));
         PLAYER_SPRITE_MAP.put("filled_bottle", new Image(Objects.requireNonNull(Player.class.getResourceAsStream("player_filled_bottle.png"))));
     }
+
+    /**
+     * Player width.
+     */
     public final static int PLAYER_WIDTH = 50;
+
+    /**
+     * Player height.
+     */
     public final static int PLAYER_HEIGHT = 50;
 
     private double speed;
@@ -37,6 +55,13 @@ public class Player {
     private Item inventory;
     private Image sprite;
 
+    /**
+     * Constructs a player.
+     *
+     * @param speed the speed
+     * @param xPosition the x position
+     * @param yPosition the y position
+     */
     public Player(final int speed, final int xPosition, final int yPosition) {
         this.speed = speed;
         this.xPosition = xPosition;
@@ -47,13 +72,20 @@ public class Player {
         this.sprite = PLAYER_SPRITE_MAP.get("idle");
     }
 
+    /**
+     * Draws the player.
+     *
+     * @param gc the graphics context
+     */
     public void draw(GraphicsContext gc) {
         gc.setImageSmoothing(false);
         // TODO: rework these magic numbers
         gc.drawImage(sprite, xPosition, yPosition - 39, width, height + 39);
     }
 
-    // TODO: rework this method
+    /**
+     * Animates the player.
+     */
     public void animate() {
         if (this.yDirection == -1 && this.inventory != null) {
             this.sprite = PLAYER_SPRITE_MAP.get("idle_back_item");
@@ -85,6 +117,12 @@ public class Player {
         }
     }
 
+    /**
+     * Checks if the player is near an interactable.
+     *
+     * @param interactable the interactable
+     * @return true if the player is near the interactable
+     */
     public boolean isNearInteractable(Interactable interactable) {
         // Calculate the distance between the player and the interactable
         double playerX = this.getXPosition() + this.getWidth() / 2;
@@ -100,6 +138,11 @@ public class Player {
         return distance <= threshold;
     }
 
+    /**
+     * Checks if the player is colliding with a collidable.
+     *
+     * @param collidable the collidable
+     */
     public void isCollidingWithCollidable(Collidable collidable) {
         double xOverlap = Math.max(0, Math.min(this.getXPosition() + this.getWidth(), collidable.getXPosition() + collidable.getWidth()) - Math.max(this.getXPosition(), collidable.getXPosition()));
         double yOverlap = Math.max(0, Math.min(this.getYPosition() + this.getHeight(), collidable.getYPosition() + collidable.getHeight()) - Math.max(this.getYPosition(), collidable.getYPosition()));
@@ -123,42 +166,84 @@ public class Player {
         }
     }
 
+    /**
+     * Gets the x position.
+     *
+     * @return the x position
+     */
     public double getXPosition() {
         return xPosition;
     }
 
+    /**
+     * Gets the y position.
+     *
+     * @return the y position
+     */
     public double getYPosition() {
         return yPosition;
     }
 
+    /**
+     * Sets the x position.
+     */
     public void setXPosition(double xPosition) {
         this.xPosition = xPosition;
     }
 
+    /**
+     * Sets the y position.
+     */
     public void setYPosition(double yPosition) {
         this.yPosition = yPosition;
     }
 
+    /**
+     *  Sets the x direction.
+     */
     public void setXDirection(int xDirection) {
         this.xDirection = xDirection;
     }
 
+    /**
+     * Sets the y direction.
+     */
     public void setYDirection(int yDirection) {
         this.yDirection = yDirection;
     }
 
+    /**
+     * Gets the width.
+     *
+     * @return the width
+     */
     public double getWidth() {
         return width;
     }
 
+    /**
+     * Gets the height.
+     *
+     * @return the height
+     */
     public double getHeight() {
         return height;
     }
 
+    /**
+     * Gets the inventory.
+     *
+     * @return the inventory
+     */
     public Item getInventory() {
         return inventory;
     }
 
+    /**
+     * Moves the player.
+     *
+     * @param delta delta time
+     */
     public void move(double delta) {
         if (xDirection == 1) {
             xPosition += speed * delta;
@@ -172,6 +257,11 @@ public class Player {
         }
     }
 
+    /**
+     * Handles the player interacting with an ingredient box.
+     *
+     * @param ingredientBox the ingredient box
+     */
     public void handleIngredient(IngredientBox ingredientBox) {
         if (this.inventory == null) {
             if (ingredientBox.getClass() == HogrootBox.class) {
@@ -196,6 +286,9 @@ public class Player {
         }
     }
 
+    /**
+     * Handles the player interacting with a bottle.
+     */
     public void handleBottle() {
         if (this.inventory == null) {
             this.inventory = new Bottle();
@@ -207,10 +300,18 @@ public class Player {
         }
     }
 
+    /**
+     * Removes the inventory item.
+     */
     public void removeFromInventory() {
         this.inventory = null;
     }
 
+    /**
+     * Returns a string representation of the player.
+     *
+     * @return a string representation of the player
+     */
     @Override
     public String toString() {
         return "Player{" +

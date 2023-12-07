@@ -19,10 +19,31 @@ import java.util.*;
 import static ca.bcit.comp2522.termproject.jaguarundi.systems.GameApp.playSound;
 import static ca.bcit.comp2522.termproject.jaguarundi.systems.SaveLoadDialog.updateSaveFile;
 
+/**
+ * Level class to handle the level logic.
+ *
+ * @author Vivian, Adam
+ * @version 2022
+ */
 public class Level {
+    /**
+     * The time it takes to transition to the next level.
+     */
     public static final int TRANSITION_TIME = 3;
+
+    /**
+     * The maximum level index.
+     */
     private static final int MAX_LEVEL_INDEX = 2;
+
+    /**
+     * The level complete banner.
+     */
     public final static Image LEVEL_COMPLETE_BANNER = new Image(Objects.requireNonNull(Level.class.getResourceAsStream("level_complete.png")));
+
+    /**
+     * The game complete banner.
+     */
     public final static Image GAME_COMPLETE_BANNER = new Image(Objects.requireNonNull(Level.class.getResourceAsStream("game_complete.png")));
 
     private GameManager gameManager;
@@ -37,6 +58,18 @@ public class Level {
     private double transitionTimer;
     private boolean levelCompleted ;
 
+    /**
+     * Constructs a level.
+     *
+     * @param gameManager the game manager
+     * @param player the player
+     * @param bottleBox the bottle box
+     * @param trashCan the trash can
+     * @param cauldrons the cauldrons
+     * @param ingredientBoxes the ingredient boxes
+     * @param customers the customers
+     * @param walls the walls
+     */
     public Level (GameManager gameManager, Player player, BottleBox bottleBox, TrashCan trashCan, ArrayList<Cauldron> cauldrons, ArrayList<IngredientBox> ingredientBoxes, ArrayList<Customer> customers, ArrayList<Wall> walls) {
         this.gameManager = gameManager;
         this.player = player;
@@ -51,6 +84,14 @@ public class Level {
         this.levelCompleted = false;
     }
 
+    /**
+     * Initializes the positions of the objects.
+     *
+     * @param cauldronPositions
+     * @param ingredientBoxPositions
+     * @param customerPositions
+     * @param wallPositions
+     */
     public void initializeObjectPositions(
             double[][] cauldronPositions, double[][] ingredientBoxPositions,
             double[][] customerPositions, double[][] wallPositions) {
@@ -73,6 +114,11 @@ public class Level {
         }
     }
 
+    /**
+     * Updates the level.
+     *
+     * @param delta the time
+     */
     public void updateLevel(double delta) {
         // Update the game objects using delta time
         player.move(delta);
@@ -99,6 +145,11 @@ public class Level {
         }
     }
 
+    /**
+     * Draws the level.
+     *
+     * @param gc
+     */
     public void drawLevel(GraphicsContext gc) {
         for (Cauldron cauldron : cauldrons) cauldron.draw(gc);
         bottleBox.draw(gc);
@@ -117,13 +168,16 @@ public class Level {
             gc.setFill(Color.BLACK);
             gc.setFont(javafx.scene.text.Font.font("Baskerville Old Face", 30));
             String rubiesText = String.valueOf(gameManager.getRubies());
-            double rubiesTextWidth = rubiesText.length() * 15;
-
-            double rubiesX = 450 - rubiesTextWidth / 2;
+            double rubiesX = 450;
             gc.fillText(rubiesText, rubiesX, 300);
         }
     }
 
+    /**
+     * Increments the transition timer.
+     *
+     * @param delta the time
+     */
     public void incrementTransitionTimer(double delta) {
         if (transitionTimer < TRANSITION_TIME) {
             transitionTimer += delta;
@@ -132,6 +186,11 @@ public class Level {
         }
     }
 
+    /**
+     * Handles key presses.
+     *
+     * @param event the key event
+     */
     public void handleKeyPress(KeyEvent event) {
         if (!levelCompleted) {
             KeyCode code = event.getCode();
@@ -163,7 +222,11 @@ public class Level {
         }
     }
 
-
+    /**
+     * Handles key releases.
+     *
+     * @param event the key event
+     */
     public void handleKeyRelease(KeyEvent event) {
         KeyCode code = event.getCode();
         // Handle key releases specific to this level
@@ -175,6 +238,9 @@ public class Level {
         }
     }
 
+    /**
+     * Handles interactions.
+     */
     private void handleInteractions() {
         for (IngredientBox ingredientBox : ingredientBoxes) {
             interactWithIngredientBox(ingredientBox);
@@ -192,6 +258,11 @@ public class Level {
         interactWithTrashCan();
     }
 
+    /**
+     * Interacts with an ingredient box.
+     *
+     * @param ingredientBox the ingredient box
+     */
     private void interactWithIngredientBox(IngredientBox ingredientBox) {
         if (player.isNearInteractable(ingredientBox)) {
             player.handleIngredient(ingredientBox);
@@ -199,6 +270,11 @@ public class Level {
         }
     }
 
+    /**
+     * Interacts with a cauldron.
+     *
+     * @param cauldron the cauldron
+     */
     private void interactWithCauldron(Cauldron cauldron) {
         if (player.isNearInteractable(cauldron)) {
             if (cauldron.getIngredient() == null && player.getInventory() instanceof Ingredient) {
@@ -215,6 +291,11 @@ public class Level {
         }
     }
 
+    /**
+     * Interacts with a customer.
+     *
+     * @param customer the customer
+     */
     private void interactWithCustomer(Customer customer) {
         if (customer.getPatience() < 100 && player.isNearInteractable(customer) && player.getInventory() instanceof Bottle) {
             this.verifyOrder(customer);
@@ -223,7 +304,9 @@ public class Level {
         }
     }
 
-
+    /**
+     * Interacts with the bottle box.
+     */
     private void interactWithBottleBox() {
         if (player.isNearInteractable(bottleBox)) {
             player.handleBottle();
@@ -231,13 +314,22 @@ public class Level {
         }
     }
 
+    /**
+     * Interacts with the trash can.
+     */
     private void interactWithTrashCan() {
         if (player.isNearInteractable(trashCan)) {
             player.removeFromInventory();
         }
     }
 
-    public boolean verifyOrder(Customer customer) {
+    /**
+     * Verifies the order.
+     *
+     * @param customer the customer
+     * @return true if the order is correct
+     */
+    public void verifyOrder(Customer customer) {
         Bottle playerBottle = (Bottle) player.getInventory();
         ArrayList<Ingredient> playerOrder = playerBottle.getIngredients();
         ArrayList<Ingredient> customerOrder = customer.getOrder();
@@ -273,9 +365,13 @@ public class Level {
         } else {
             playSound("order_bad.wav");
         }
-        return true;
     }
 
+    /**
+     * Gets the player.
+     *
+     * @return the player
+     */
     public Player getPlayer() {
         return player;
     }

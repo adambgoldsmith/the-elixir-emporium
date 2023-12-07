@@ -16,20 +16,53 @@ import java.nio.file.StandardOpenOption;
 import java.util.*;
 import javafx.application.Platform;
 
+/**
+ * TitleScreen Class to show the title screen and handle user input.
+ *
+ * @author Vivian , Adam
+ * @version 2023
+ */
 public class TitleScreen {
+    /**
+     * Title screen art.
+     */
     public final static Image TITLE_SCREEN_ART = new Image(Objects.requireNonNull(TitleScreen.class.getResourceAsStream("TitleScreenArt.png")));
+
+    /**
+     * Button width.
+     */
     public final static double BUTTON_WIDTH = 300;
+
+    /**
+     * Button height.
+     */
     public final static double BUTTON_HEIGHT = 75;
+
+    /**
+     * Name level regex.
+     */
     private static final String NAME_LEVEL_REGEX = "\\*.*\\*\\d+";
+
 
     private GameApp gameApp;
     private GameManager gameManager;
 
-    public TitleScreen(GameApp gameApp, GameManager gameManager) {
+    /**
+     * Constructs a TitleScreen object.
+     *
+     * @param gameApp the game app
+     * @param gameManager the game manager
+     */
+    public TitleScreen(final GameApp gameApp, final GameManager gameManager) {
         this.gameApp = gameApp;
         this.gameManager = gameManager;
     }
 
+    /**
+     * Draws the title screen.
+     *
+     * @param gc the graphics context
+     */
     public void draw(final GraphicsContext gc) {
         // Draw the background image
         gc.drawImage(TITLE_SCREEN_ART, 0, 0, 1000, 550);
@@ -51,6 +84,11 @@ public class TitleScreen {
         gc.fillText("Quit", 140 + BUTTON_WIDTH / 2 - gc.getFont().getSize() * 2, 365 + BUTTON_HEIGHT / 2);
     }
 
+    /**
+     * Updates the title screen.
+     *
+     * @param mouseEvent the mouse event
+     */
     public void update(final MouseEvent mouseEvent) {
         double mouseX = mouseEvent.getX();
         double mouseY = mouseEvent.getY();
@@ -66,10 +104,24 @@ public class TitleScreen {
         }
     }
 
+    /**
+     * Checks if the mouse is in the button.
+     *
+     * @param mouseX the mouse x position
+     * @param mouseY the mouse y position
+     * @param buttonX the button x position
+     * @param buttonY the button y position
+     * @param buttonWidth the button width
+     * @param buttonHeight the button height
+     * @return true if the mouse is in the button, false otherwise
+     */
     private boolean isMouseInButton(final double mouseX, final double mouseY, final double buttonX, final double buttonY, final double buttonWidth, final double buttonHeight) {
         return mouseX >= buttonX && mouseX <= buttonX + buttonWidth && mouseY >= buttonY && mouseY <= buttonY + buttonHeight;
     }
 
+    /**
+     * Handles the start button click.
+     */
     private void handleStartButtonClick() {
         Map<String, Integer> namesAndNumbers = readNamesFromFile("saves.txt");
         Optional<String> result = SaveLoadDialog.showSaveLoadDialog(namesAndNumbers);
@@ -77,8 +129,11 @@ public class TitleScreen {
         result.ifPresent(this::processUserInput);
     }
 
-
-
+    /**
+     * Processes the user input.
+     *
+     * @param name the name
+     */
     private void processUserInput(final String name) {
         if (name.matches(NAME_LEVEL_REGEX)) {
             handleNamedLevelInput(name);
@@ -89,6 +144,11 @@ public class TitleScreen {
         gameApp.setGameStarted(true);
     }
 
+    /**
+     * Handles the named level input.
+     *
+     * @param name the name
+     */
     private void handleNamedLevelInput(final String name) {
         String[] nameParts = name.split("\\*");
 
@@ -105,6 +165,11 @@ public class TitleScreen {
         }
     }
 
+    /**
+     * Handles the regular name input.
+     *
+     * @param name the name
+     */
     private void handleRegularNameInput(final String name) {
         if (!name.isEmpty()) {
             appendNameToFile(name, "saves.txt");
@@ -118,11 +183,20 @@ public class TitleScreen {
         }
     }
 
+    /**
+     * Handles the quit button click.
+     */
     private void handleQuitButtonClick() {
         // TODO: Add quit button functionality
         Platform.exit();
     }
 
+    /**
+     * Reads the names from the file.
+     *
+     * @param fileName the file name
+     * @return the names and numbers
+     */
     private Map<String, Integer> readNamesFromFile(final String fileName) {
         Map<String, Integer> namesAndNumbers = new HashMap<>();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(
@@ -144,6 +218,12 @@ public class TitleScreen {
         return namesAndNumbers;
     }
 
+    /**
+     * Appends the name to the file.
+     *
+     * @param name the name
+     * @param fileName the file name
+     */
     private void appendNameToFile(final String name, final String fileName) {
         try {
             Path path = Paths.get(TitleScreen.class.getResource("/ca/bcit/comp2522/termproject/jaguarundi/" + fileName).toURI());
