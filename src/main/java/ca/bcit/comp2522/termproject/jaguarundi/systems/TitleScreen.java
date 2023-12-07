@@ -54,12 +54,14 @@ public class TitleScreen {
         double mouseX = mouseEvent.getX();
         double mouseY = mouseEvent.getY();
 
-        if (isMouseInButton(mouseX, mouseY, 100, 250, BUTTON_WIDTH, BUTTON_HEIGHT)) {
-            handleStartButtonClick();
-        }
+        if (!gameApp.getIsGameStarted()) {
+            if (isMouseInButton(mouseX, mouseY, 100, 250, BUTTON_WIDTH, BUTTON_HEIGHT)) {
+                handleStartButtonClick();
+            }
 
-        else if (isMouseInButton(mouseX, mouseY, 100, 350, BUTTON_WIDTH, BUTTON_HEIGHT)) {
-            handleQuitButtonClick();
+            else if (isMouseInButton(mouseX, mouseY, 100, 350, BUTTON_WIDTH, BUTTON_HEIGHT)) {
+                handleQuitButtonClick();
+            }
         }
     }
 
