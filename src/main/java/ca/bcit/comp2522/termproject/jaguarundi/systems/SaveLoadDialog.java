@@ -58,6 +58,10 @@ public class SaveLoadDialog {
         DialogPane dialogPane = new DialogPane();
         dialog.setDialogPane(dialogPane);
 
+        // create a close button
+        dialogPane.getButtonTypes().add(ButtonType.CLOSE);
+
+
         // Create UI components
         TextField nameTextField = new TextField();
         Button enterButton = new Button("Enter");
