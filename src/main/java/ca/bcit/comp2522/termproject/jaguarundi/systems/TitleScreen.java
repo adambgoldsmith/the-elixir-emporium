@@ -14,6 +14,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
+import javafx.application.Platform;
 
 public class TitleScreen {
     public final static Image TITLE_SCREEN_ART = new Image(Objects.requireNonNull(TitleScreen.class.getResourceAsStream("TitleScreenArt.png")));
@@ -76,6 +77,8 @@ public class TitleScreen {
         result.ifPresent(this::processUserInput);
     }
 
+
+
     private void processUserInput(final String name) {
         if (name.matches(NAME_LEVEL_REGEX)) {
             handleNamedLevelInput(name);
@@ -117,7 +120,7 @@ public class TitleScreen {
 
     private void handleQuitButtonClick() {
         // TODO: Add quit button functionality
-        System.out.println("Quit button clicked");
+        Platform.exit();
     }
 
     private Map<String, Integer> readNamesFromFile(final String fileName) {
