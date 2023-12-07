@@ -11,5 +11,5 @@ public class FrostfernLeaves extends Ingredient {
     /**
      * Constructs frostfern leaves.
      */
-    public FrostfernLeaves() {}
+    public FrostfernLeaves() { }
 }
