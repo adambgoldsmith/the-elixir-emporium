@@ -1,6 +1,15 @@
 package ca.bcit.comp2522.termproject.jaguarundi.holdables;
+/**
+ * A scorch radish.
+ *
+ * @author Vivian , Adam
+ * @version 2023
+ */
 
 public class ScorchRadish extends Ingredient {
-    public ScorchRadish() {}
+    /**
+     * Constructs a scorch radish.
+     */
+    public ScorchRadish() { }
 }
 
