@@ -17,7 +17,7 @@ public class GameApp extends Application {
     private static MediaPlayer mediaPlayer;
     private static MediaPlayer backgroundMusicPlayer;
 
-    private Canvas canvas;  // Define canvas as an instance variable
+    private Canvas canvas;
     private TitleScreen titleScreen;
     private GameManager gameManager;
     private boolean isGameStarted = false;

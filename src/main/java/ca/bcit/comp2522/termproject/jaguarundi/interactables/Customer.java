@@ -89,15 +89,16 @@ public class Customer extends Interactable {
 
         if (this.isWaiting) {
             if (order.size() == 2) {
-                gc.drawImage(ORDER_BUBBLES.get("size_one"), xPosition - 20, yPosition);
+                gc.drawImage(ORDER_BUBBLES.get("size_one"), xPosition - 50, yPosition);
             } else if (order.size() == 3) {
-                gc.drawImage(ORDER_BUBBLES.get("size_two"), xPosition - 20, yPosition);
+                gc.drawImage(ORDER_BUBBLES.get("size_two"), xPosition - 70, yPosition);
             } else if (order.size() == 4) {
-                gc.drawImage(ORDER_BUBBLES.get("size_three"), xPosition - 20, yPosition);
+                gc.drawImage(ORDER_BUBBLES.get("size_three"), xPosition - 90, yPosition);
             }
 
-            double iconX = xPosition - 20; // Adjust this value based on your layout
-            double iconY = yPosition;
+            double bubbleWidth = 30; // Adjust this value based on your layout
+            double iconX = xPosition - bubbleWidth; // Start with the right side of the order bubble
+            double iconY = yPosition; // Adjust this value based on your layout
 
             for (Ingredient ingredient : order) {
                 if (ingredient instanceof Hogroot) {
@@ -113,7 +114,7 @@ public class Customer extends Interactable {
                 }
 
                 // Adjust the position for the next icon
-                iconX += 15; // Adjust this value based on your layout
+                iconX -= 20; // Adjust this value based on your layout
             }
         }
 

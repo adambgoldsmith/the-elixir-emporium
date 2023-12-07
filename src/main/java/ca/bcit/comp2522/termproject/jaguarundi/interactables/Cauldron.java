@@ -104,7 +104,6 @@ public class Cauldron extends Interactable implements Collidable {
         }
     }
 
-
     public void removeIngredient() {
         this.ingredient = null;
         System.out.println("Removed ingredient from cauldron");
