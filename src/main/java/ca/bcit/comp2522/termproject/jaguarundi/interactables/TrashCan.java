@@ -1,6 +1,5 @@
 package ca.bcit.comp2522.termproject.jaguarundi.interactables;
 
-import ca.bcit.comp2522.termproject.jaguarundi.boxes.BottleBox;
 import ca.bcit.comp2522.termproject.jaguarundi.systems.Interactable;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;

@@ -44,8 +44,8 @@ public class Customer extends Interactable {
     public final static int CUSTOMER_WIDTH = 150;
     public final static int CUSTOMER_HEIGHT = 50;
 
-    public final static int CUSTOMER_ORDER_POSITION_1 = 275;
-    public final static int CUSTOMER_ORDER_POSITION_2 = 350;
+    public final static int CUSTOMER_ORDER_POSITION_1 = 125;
+    public final static int CUSTOMER_ORDER_POSITION_2 = 275;
     public final static int CUSTOMER_ORDER_POSITION_3 = 425;
 
     public final static int CUSTOMER_FINAL_POSITION_Y = -50;
