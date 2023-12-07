@@ -15,7 +15,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 
 import java.util.*;
-import java.util.stream.Collectors;
+
+import static ca.bcit.comp2522.termproject.jaguarundi.systems.GameApp.playSound;
 import static ca.bcit.comp2522.termproject.jaguarundi.systems.SaveLoadDialog.updateSaveFile;
 
 public class Level {
@@ -195,6 +196,7 @@ public class Level {
     private void interactWithIngredientBox(IngredientBox ingredientBox) {
         if (player.isNearInteractable(ingredientBox)) {
             player.handleIngredient(ingredientBox);
+            playSound("item_pickup.wav");
         }
     }
 
@@ -203,11 +205,13 @@ public class Level {
             if (cauldron.getIngredient() == null && player.getInventory() instanceof Ingredient) {
                 cauldron.addIngredient((Ingredient) player.getInventory());
                 player.removeFromInventory();
+                playSound("add_to_cauldron.wav");
             } else if (cauldron.getIngredient() != null &&
                     player.getInventory() instanceof Bottle &&
                     cauldron.getIngredient().getStage() == 1) {
                 ((Bottle) player.getInventory()).addIngredient(cauldron.getIngredient());
                 cauldron.removeIngredient();
+                playSound("bottle_potion.wav");
             }
         }
     }
@@ -224,6 +228,7 @@ public class Level {
     private void interactWithBottleBox() {
         if (player.isNearInteractable(bottleBox)) {
             player.handleBottle();
+            playSound("item_pickup.wav");
         }
     }
 
@@ -234,33 +239,43 @@ public class Level {
     }
 
     public boolean verifyOrder(Customer customer) {
-            Bottle playerBottle = (Bottle) player.getInventory();
-            ArrayList<Ingredient> playerOrder = playerBottle.getIngredients();
-            ArrayList<Ingredient> customerOrder = customer.getOrder();
-            System.out.println(playerOrder);
-            System.out.println(customerOrder);
+        Bottle playerBottle = (Bottle) player.getInventory();
+        ArrayList<Ingredient> playerOrder = playerBottle.getIngredients();
+        ArrayList<Ingredient> customerOrder = customer.getOrder();
+        playerOrder.sort(Comparator.comparing(o -> o.getClass().getName()));
+        customerOrder.sort(Comparator.comparing(o -> o.getClass().getName()));
+        System.out.println(playerOrder);
+        System.out.println(customerOrder);
 
-            int correctCount = 0;
+        int correctCount = 0;
 
-            Set<Ingredient> matchedIngredients = new HashSet<>();
-
-            for (Ingredient playerIngredient : playerOrder) {
-                for (Ingredient customerIngredient : customerOrder) {
-                    if (!matchedIngredients.contains(customerIngredient) &&
-                            playerIngredient.getClass() == customerIngredient.getClass()) {
-                        correctCount++;
-                        matchedIngredients.add(customerIngredient);
-                        break;
-                    }
-                }
+        for (int i = 0; i < Math.min(playerOrder.size(), customerOrder.size()); i++) {
+            if (playerOrder.get(i).getClass() == customerOrder.get(i).getClass()) {
+                correctCount++;
             }
-            int excessCount = playerOrder.size() - correctCount;
-            System.out.println("Excess: " + excessCount);
-            double satisfactionLevel = ((double) Math.max(0,correctCount-excessCount) / customerOrder.size()) * 100;
-            customer.setSatisfactionLevel(satisfactionLevel);
-            gameManager.incrementRubies(customer.calculateRubies(correctCount));
-            return correctCount > 0 && excessCount == 0;
         }
+        if (playerOrder.size() > customerOrder.size()) {
+            correctCount -= playerOrder.size() - customerOrder.size();
+            if (correctCount < 0) {
+                correctCount = 0;
+            }
+        }
+
+        System.out.println(correctCount);
+
+        customer.setSatisfactionLevel(((double) correctCount / customerOrder.size()) * 100);
+        gameManager.incrementRubies(customer.calculateRubies(correctCount));
+
+        double satisfactionLevel = customer.getSatisfactionLevel();
+        if (satisfactionLevel >= 66) {
+            playSound("order_good.wav");
+        } else if (satisfactionLevel >= 33) {
+            playSound("order_mid.wav");
+        } else {
+            playSound("order_bad.wav");
+        }
+        return true;
+    }
 
     public Player getPlayer() {
         return player;
