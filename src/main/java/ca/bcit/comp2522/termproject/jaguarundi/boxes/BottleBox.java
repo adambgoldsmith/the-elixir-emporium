@@ -9,7 +9,7 @@ import java.util.Objects;
 /**
  * A box that holds bottles.
  *
- * @author Vivian ,Adam
+ * @author Vivian , Adam
  * @version 2023
  *     The type of elements in this set.
  */
