@@ -14,10 +14,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import static ca.bcit.comp2522.termproject.jaguarundi.systems.SaveLoadDialog.updateSaveFile;
 
@@ -236,32 +233,34 @@ public class Level {
         }
     }
 
-    public void verifyOrder(Customer customer) {
-        Bottle playerBottle = (Bottle) player.getInventory();
-        List<Ingredient> playerOrder = playerBottle.getIngredients();
-        List<Ingredient> customerOrder = customer.getOrder();
-        System.out.println(playerOrder);
-        System.out.println(customerOrder);
+    public boolean verifyOrder(Customer customer) {
+            Bottle playerBottle = (Bottle) player.getInventory();
+            ArrayList<Ingredient> playerOrder = playerBottle.getIngredients();
+            ArrayList<Ingredient> customerOrder = customer.getOrder();
+            System.out.println(playerOrder);
+            System.out.println(customerOrder);
 
-        Set<Class<? extends Ingredient>> uniquePlayerIngredients = playerOrder.stream()
-                .map(Ingredient::getClass)
-                .collect(Collectors.toSet());
+            int correctCount = 0;
 
-        long correctCount = customerOrder.stream()
-                .map(Ingredient::getClass)
-                .filter(uniquePlayerIngredients::contains)
-                .count();
+            Set<Ingredient> matchedIngredients = new HashSet<>();
 
-        long extraIngredientsCount = Math.max(0, playerOrder.size() - customerOrder.size());
-
-        long adjustedCorrectCount = Math.max(0, correctCount - extraIngredientsCount);
-
-        double satisfactionLevel = (adjustedCorrectCount / (double) customerOrder.size()) * 100;
-        customer.setSatisfactionLevel(satisfactionLevel);
-
-        gameManager.incrementRubies(customer.calculateRubies((int) adjustedCorrectCount));
-    }
-
+            for (Ingredient playerIngredient : playerOrder) {
+                for (Ingredient customerIngredient : customerOrder) {
+                    if (!matchedIngredients.contains(customerIngredient) &&
+                            playerIngredient.getClass() == customerIngredient.getClass()) {
+                        correctCount++;
+                        matchedIngredients.add(customerIngredient);
+                        break;
+                    }
+                }
+            }
+            int excessCount = playerOrder.size() - correctCount;
+            System.out.println("Excess: " + excessCount);
+            double satisfactionLevel = ((double) Math.max(0,correctCount-excessCount) / customerOrder.size()) * 100;
+            customer.setSatisfactionLevel(satisfactionLevel);
+            gameManager.incrementRubies(customer.calculateRubies(correctCount));
+            return correctCount > 0 && excessCount == 0;
+        }
 
     public Player getPlayer() {
         return player;
