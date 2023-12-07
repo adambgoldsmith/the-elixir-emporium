@@ -10,5 +10,5 @@ public class Hogroot extends Ingredient {
     /**
      * Constructs hogroot.
      */
-    public Hogroot() {}
+    public Hogroot() { }
 }
