@@ -11,7 +11,6 @@ import java.util.Objects;
  *
  * @author Vivian , Adam
  * @version 2023
- *     The type of elements in this set.
  */
 
 public class BottleBox extends Interactable implements Collidable {
