@@ -50,7 +50,7 @@ public class GameManager {
                 new double[][]{{600, 150}, {300, 350}, {300, 150}},
                 new double[][]{{200, 50}, {700, 450}, {700, 50}},
                 new double[][]{{100, 550}, {100,550}, {100, 550}, {100,550}, {100, 550}},
-                new double[][]{{50, 0}, {0, 500}, {0, 0}, {750, 0}, {150, 50}}
+                new double[][]{{50, 0}, {150, 0}, {0, 500}, {150, 500}, {0, 0}, {750, 0}, {150, 50}}
         );
         levels.add(level1);
         Level level2 = new Level(
@@ -67,7 +67,7 @@ public class GameManager {
                 new double[][]{{400, 150}, {400, 350}, {300, 250}, {500, 250}},
                 new double[][]{{350, 50}, {700, 250}, {700, 350}, {300, 450}},
                 new double[][]{{100, 550}, {100,550}, {100, 550}, {100,550}, {100, 550}},
-                new double[][]{{50, 0}, {0, 500}, {0, 0}, {750, 0}, {150, 50,},
+                new double[][]{{50, 0}, {150, 0}, {0, 500}, {150, 500}, {0, 0}, {750, 0}, {150, 50,},
                         {300, 50}, {300, 100}, {350, 100}, {400, 100}, {450, 100},
                         {600, 300}, {600, 350}, {650, 300}, {700, 300}}
         );
@@ -86,7 +86,7 @@ public class GameManager {
                 new double[][]{{300, 150}, {400, 50}, {450, 200}, {500, 50}, {600, 150}},
                 new double[][]{{200, 50}, {300, 450}, {400, 450}, {700, 450}, {550, 300}},
                 new double[][]{{100, 550}, {100,550}, {100, 550}, {100,550}, {100, 550}},
-                new double[][]{{50, 0}, {0, 500}, {0, 0}, {750, 0}, {150, 50},
+                new double[][]{{50, 0}, {150, 0}, {0, 500}, {150, 500}, {0, 0}, {750, 0}, {150, 50},
                         {250, 50}, {250, 100}, {250, 150},
                         {450, 50}, {450, 100}, {450, 150},
                         {350, 400}, {350, 450},
@@ -130,8 +130,10 @@ public class GameManager {
 
     public ArrayList<Wall> createWalls(int quantity) {
         ArrayList<Wall> walls = new ArrayList<>();
-        walls.add(new Wall(700, 50, "top"));
-        walls.add(new Wall(800, 50, "bottom"));
+        walls.add(new Wall(50, 50, "top"));
+        walls.add(new Wall(600, 50, "top"));
+        walls.add(new Wall(100, 50, "bottom"));
+        walls.add(new Wall(650, 50, "bottom"));
         walls.add(new Wall(50, 500, "side"));
         walls.add(new Wall(50, 500, "side"));
         walls.add(new Wall(50, 450, "counter"));

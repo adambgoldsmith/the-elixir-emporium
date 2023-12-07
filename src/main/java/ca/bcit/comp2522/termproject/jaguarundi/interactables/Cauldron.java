@@ -5,6 +5,7 @@ import ca.bcit.comp2522.termproject.jaguarundi.systems.Interactable;
 import ca.bcit.comp2522.termproject.jaguarundi.holdables.*;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 import java.util.Map;
@@ -50,7 +51,7 @@ public class Cauldron extends Interactable implements Collidable {
 
     public void draw(GraphicsContext gc) {
         gc.setImageSmoothing(false);
-        gc.setFont(javafx.scene.text.Font.font("Baskerville Old Face", 20));
+        gc.setFont(javafx.scene.text.Font.font("Baskerville Old Face", FontWeight.BOLD, 20));
         gc.setTextAlign(javafx.scene.text.TextAlignment.CENTER);
         gc.drawImage(sprite, xPosition, yPosition, width, height);
         gc.fillText(text.getText(), xPosition + width / 2 , yPosition + height / 2 + CAULDRON_TEXT_Y_OFFSET);
