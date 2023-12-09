@@ -208,7 +208,7 @@ public class Level {
                 case D:
                     player.setXDirection(1);
                     break;
-                case E:
+                case E, SPACE:
                     handleInteractions();
                     break;
                 default:
