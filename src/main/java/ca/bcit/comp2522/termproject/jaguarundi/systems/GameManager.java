@@ -70,7 +70,7 @@ public class GameManager {
         Level level2 = new Level(
                 this,
                 new Player(300, 400, 400),
-                new BottleBox(200, 50),
+                new BottleBox(250, 50),
                 new TrashCan(700, 50),
                 createCauldrons(4),
                 createIngredientBoxes(2),

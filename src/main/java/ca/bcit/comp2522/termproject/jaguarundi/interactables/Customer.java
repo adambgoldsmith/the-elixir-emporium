@@ -74,7 +74,7 @@ public class Customer extends Interactable {
     /**
      * The x position of the first customer.
      */
-    public final static int CUSTOMER_ORDER_POSITION_1 = 125;
+    public final static int CUSTOMER_ORDER_POSITION_1 = 175;
     /**
      * The x position of the second customer.
      */
@@ -82,7 +82,7 @@ public class Customer extends Interactable {
     /**
      * The x position of the third customer.
      */
-    public final static int CUSTOMER_ORDER_POSITION_3 = 425;
+    public final static int CUSTOMER_ORDER_POSITION_3 = 375;
     /**
      * The y position of the customer.
      */
