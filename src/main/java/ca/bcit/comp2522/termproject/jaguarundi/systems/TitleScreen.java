@@ -1,5 +1,6 @@
 package ca.bcit.comp2522.termproject.jaguarundi.systems;
 
+import ca.bcit.comp2522.termproject.jaguarundi.boxes.HogrootBox;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
@@ -26,7 +27,14 @@ public class TitleScreen {
     /**
      * Title screen art.
      */
-    public final static Image TITLE_SCREEN_ART = new Image(Objects.requireNonNull(TitleScreen.class.getResourceAsStream("TitleScreenArt.png")));
+    public final static Image TITLE_SCREEN_ART = new Image(Objects.requireNonNull(TitleScreen.class.
+            getResourceAsStream("TitleScreenArt.png")));
+
+    /**
+     * Tutorial art.
+     */
+    public final static Image TUTORIAL_ART = new Image(Objects.requireNonNull(TitleScreen.class.
+            getResourceAsStream("tutorial_page.png")));
 
     /**
      * Button width.
@@ -46,6 +54,7 @@ public class TitleScreen {
 
     private GameApp gameApp;
     private GameManager gameManager;
+    private boolean isTutorialOpen = false;
 
     /**
      * Constructs a TitleScreen object.
@@ -64,6 +73,8 @@ public class TitleScreen {
      * @param gc the graphics context
      */
     public void draw(final GraphicsContext gc) {
+        gc.setImageSmoothing(false);
+
         // Draw the background image
         gc.drawImage(TITLE_SCREEN_ART, 0, 0, 1000, 550);
 
@@ -82,6 +93,17 @@ public class TitleScreen {
         gc.fillRect(100, 350, BUTTON_WIDTH, BUTTON_HEIGHT);
         gc.setFill(Color.WHITE);
         gc.fillText("Quit", 140 + BUTTON_WIDTH / 2 - gc.getFont().getSize() * 2, 365 + BUTTON_HEIGHT / 2);
+
+        // Tutorial Button
+        gc.setFill(Color.PURPLE);
+        gc.fillRect(44, 453, 66, 66);
+        gc.setFill(Color.WHITE);
+        gc.fillText("?", 70, 500);
+
+        // Draw tutorial
+        if (isTutorialOpen) {
+            gc.drawImage(TUTORIAL_ART, 0, 0, 1000, 550);
+        }
     }
 
     /**
@@ -94,12 +116,18 @@ public class TitleScreen {
         double mouseY = mouseEvent.getY();
 
         if (!gameApp.getIsGameStarted()) {
-            if (isMouseInButton(mouseX, mouseY, 100, 250, BUTTON_WIDTH, BUTTON_HEIGHT)) {
-                handleStartButtonClick();
+            if (!isTutorialOpen) {
+                if (isMouseInButton(mouseX, mouseY, 100, 250, BUTTON_WIDTH, BUTTON_HEIGHT)) {
+                    handleStartButtonClick();
+                }
+
+                else if (isMouseInButton(mouseX, mouseY, 100, 350, BUTTON_WIDTH, BUTTON_HEIGHT)) {
+                    handleQuitButtonClick();
+                }
             }
 
-            else if (isMouseInButton(mouseX, mouseY, 100, 350, BUTTON_WIDTH, BUTTON_HEIGHT)) {
-                handleQuitButtonClick();
+            if (isMouseInButton(mouseX, mouseY, 44, 453, 66, 66)) {
+                handleTutorialButtonClick();
             }
         }
     }
@@ -118,6 +146,14 @@ public class TitleScreen {
     private boolean isMouseInButton(final double mouseX, final double mouseY, final double buttonX, final double buttonY, final double buttonWidth, final double buttonHeight) {
         return mouseX >= buttonX && mouseX <= buttonX + buttonWidth && mouseY >= buttonY && mouseY <= buttonY + buttonHeight;
     }
+
+    /**
+     * Handles the tutorial button click.
+     */
+    private void handleTutorialButtonClick() {
+        isTutorialOpen = !isTutorialOpen;
+    }
+
 
     /**
      * Handles the start button click.
