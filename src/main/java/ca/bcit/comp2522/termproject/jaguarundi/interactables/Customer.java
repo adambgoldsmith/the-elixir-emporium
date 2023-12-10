@@ -15,8 +15,45 @@ import java.util.*;
  * @author Vivian , Adam
  * @version 2023
  */
-
 public class Customer extends Interactable {
+    /**
+     * The width of the customer.
+     */
+    public static final int CUSTOMER_WIDTH = 150;
+    /**
+     * The height of the customer.
+     */
+    public static final int CUSTOMER_HEIGHT = 50;
+    /**
+     * The x position of the first customer.
+     */
+    public static final int CUSTOMER_ORDER_POSITION_1 = 175;
+    /**
+     * The x position of the second customer.
+     */
+    public static final int CUSTOMER_ORDER_POSITION_2 = 275;
+    /**
+     * The x position of the third customer.
+     */
+    public static final int CUSTOMER_ORDER_POSITION_3 = 375;
+    /**
+     * The y position of the customer.
+     */
+    public static final int CUSTOMER_FINAL_POSITION_Y = -50;
+    /**
+     * The maximum patience of the customer.
+     */
+    public static final int CUSTOMER_MAX_PATIENCE = 100;
+    /**
+     * The patience test offset.
+     */
+    public static final int PATIENCE_TEST_OFFSET = 30;
+    /**
+     * The ingredient types that the customer can order.
+     */
+    private static final String[] CUSTOMER_INGREDIENT_TYPES = {"Hogroot", "Frostfern Leaves",
+            "Scorch Radish", "Cobalt Compound", "Fluorescent Egg"};
+
     private static final Map<String, Image> SATISFACTION_FACES = new HashMap<>();
     static {
         SATISFACTION_FACES.put("happy", new Image(Objects.requireNonNull(Customer.class.
@@ -63,43 +100,7 @@ public class Customer extends Interactable {
         CUSTOMER_SPRITE_MAP.put("customer6", new Image(Objects.requireNonNull(Customer.class.
                 getResourceAsStream("scientist.png"))));
     }
-    /**
-     * The width of the customer.
-     */
-    public final static int CUSTOMER_WIDTH = 150;
-    /**
-     * The height of the customer.
-     */
-    public final static int CUSTOMER_HEIGHT = 50;
-    /**
-     * The x position of the first customer.
-     */
-    public final static int CUSTOMER_ORDER_POSITION_1 = 175;
-    /**
-     * The x position of the second customer.
-     */
-    public final static int CUSTOMER_ORDER_POSITION_2 = 275;
-    /**
-     * The x position of the third customer.
-     */
-    public final static int CUSTOMER_ORDER_POSITION_3 = 375;
-    /**
-     * The y position of the customer.
-     */
-    public final static int CUSTOMER_FINAL_POSITION_Y = -50;
-    /**
-     * The maximum patience of the customer.
-     */
-    public final static int CUSTOMER_MAX_PATIENCE = 100;
-    /**
-     * The patience test offset.
-     */
-    public final static int PATIENCE_TEST_OFFSET = 30;
-    /**
-     * The ingredient types that the customer can order.
-     */
-    private final static String[] CUSTOMER_INGREDIENT_TYPES = {"Hogroot", "Frostfern Leaves",
-            "Scorch Radish", "Cobalt Compound", "Fluorescent Egg"};
+
     private final double speed;
     private double patience;
     private boolean isWaiting;
@@ -143,7 +144,7 @@ public class Customer extends Interactable {
      */
     public void draw(final GraphicsContext gc) {
         gc.setImageSmoothing(false);
-        gc.drawImage(sprite, xPosition, yPosition ,50,50);
+        gc.drawImage(sprite, xPosition, yPosition , 50, 50);
 
         if (this.isWaiting) {
             if (order.size() == 2) {
@@ -212,7 +213,7 @@ public class Customer extends Interactable {
 
     public void move(final double delta, final ArrayList<Customer> copyCustomers) {
         int customerIndex = copyCustomers.indexOf(this);
-        int patience_factor = switch (customerLevel) {
+        int patienceFactor = switch (customerLevel) {
             case 3 -> 14;
             case 2 -> 12;
             default -> 10;
@@ -229,7 +230,7 @@ public class Customer extends Interactable {
                 }
             } else {
                 Customer nextCustomer = copyCustomers.get(customerIndex - 1);
-                if (nextCustomer.isWaiting && nextCustomer.getPatience() > this.patience + patience_factor ) {
+                if (nextCustomer.isWaiting && nextCustomer.getPatience() > this.patience + patienceFactor) {
                     this.yPosition -= delta * speed;
 
                     if (this.yPosition <= getCustomerOrderPosition(copyCustomers) && !isWaiting) {
@@ -304,16 +305,12 @@ public class Customer extends Interactable {
             }
 
             String ingredientType = CUSTOMER_INGREDIENT_TYPES[ingredientIndex];
-            if (ingredientType.equals("Hogroot")) {
-                order.add(new Hogroot());
-            } else if (ingredientType.equals("Frostfern Leaves")) {
-                order.add(new FrostfernLeaves());
-            } else if (ingredientType.equals("Scorch Radish")) {
-                order.add(new ScorchRadish());
-            } else if (ingredientType.equals("Cobalt Compound")) {
-                order.add(new CobaltCompound());
-            } else if (ingredientType.equals("Fluorescent Egg")) {
-                order.add(new FluorescentEgg());
+            switch (ingredientType) {
+                case "Hogroot" -> order.add(new Hogroot());
+                case "Frostfern Leaves" -> order.add(new FrostfernLeaves());
+                case "Scorch Radish" -> order.add(new ScorchRadish());
+                case "Cobalt Compound" -> order.add(new CobaltCompound());
+                case "Fluorescent Egg" -> order.add(new FluorescentEgg());
             }
         }
     }

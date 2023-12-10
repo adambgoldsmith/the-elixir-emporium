@@ -9,7 +9,7 @@ import java.util.Objects;
 /**
  * TrashCan class for players to dispose of items.
  *
- * @Author Adam , Vivian
+ * @author Adam , Vivian
  * @version 2023
  */
 public class TrashCan extends Interactable {
@@ -70,24 +70,6 @@ public class TrashCan extends Interactable {
      */
     public double getYPosition() {
         return yPosition;
-    }
-
-    /**
-     * Sets the x position.
-     *
-     * @param xPosition the x position
-     */
-    public void setXPosition(double xPosition) {
-        this.xPosition = xPosition;
-    }
-
-    /**
-     * Sets the y position.
-     *
-     * @param yPosition the y position
-     */
-    public void setYPosition(double yPosition) {
-        this.yPosition = yPosition;
     }
 
     /**

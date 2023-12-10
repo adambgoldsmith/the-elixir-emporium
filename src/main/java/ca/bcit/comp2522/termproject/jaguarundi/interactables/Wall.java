@@ -11,7 +11,7 @@ import java.util.Objects;
 /**
  * Wall class for players to collide with.
  *
- * @Author Adam , Vivian
+ * @author Adam , Vivian
  * @version 2023
  */
 public class Wall implements Collidable {

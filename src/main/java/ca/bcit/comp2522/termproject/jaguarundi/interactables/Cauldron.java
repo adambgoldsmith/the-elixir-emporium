@@ -23,19 +23,19 @@ public class Cauldron extends Interactable implements Collidable {
     /**
      * The width of the cauldron.
      */
-    public final static int CAULDRON_WIDTH = 50;
+    public static final int CAULDRON_WIDTH = 50;
     /**
      * The height of the cauldron.
      */
-    public final static int CAULDRON_HEIGHT = 50;
+    public static final int CAULDRON_HEIGHT = 50;
     /**
      * The time it takes to boil the cauldron.
      */
-    public final static double BOIL_TIME = 5.0;
+    public static final double BOIL_TIME = 5.0;
     /**
      * The y offset of the text.
      */
-    public final static double CAULDRON_TEXT_Y_OFFSET = 50.0;
+    public static final double CAULDRON_TEXT_Y_OFFSET = 50.0;
     /**
      * The sprite map of the cauldron.
      */
@@ -88,7 +88,7 @@ public class Cauldron extends Interactable implements Collidable {
         gc.setFont(javafx.scene.text.Font.font("Baskerville Old Face", FontWeight.BOLD, 20));
         gc.setTextAlign(javafx.scene.text.TextAlignment.CENTER);
         gc.drawImage(sprite, xPosition, yPosition, width, height);
-        gc.fillText(text.getText(), xPosition + width / 2,yPosition + height / 2 + CAULDRON_TEXT_Y_OFFSET);
+        gc.fillText(text.getText(), xPosition + width / 2, yPosition + height / 2 + CAULDRON_TEXT_Y_OFFSET);
     }
     /**
      * Animates the cauldron.
