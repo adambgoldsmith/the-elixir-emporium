@@ -196,7 +196,6 @@ public class TitleScreen {
 
             if (!enteredName.isEmpty()) {
                 gameManager.setCurrentUser(enteredName);
-                System.out.println("Current user: " + enteredName);
             }
         }
     }
@@ -215,7 +214,6 @@ public class TitleScreen {
 
         if (!name.isEmpty()) {
             gameManager.setCurrentUser(name);
-            System.out.println("Current user: " + name);
         }
     }
 

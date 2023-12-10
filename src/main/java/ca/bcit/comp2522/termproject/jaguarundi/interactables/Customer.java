@@ -226,7 +226,6 @@ public class Customer extends Interactable {
 
                 if (this.yPosition <= getCustomerOrderPosition(copyCustomers) && !isWaiting) {
                     isWaiting = true;
-                    System.out.println("Customer is waiting for order at position " + (customerIndex + 1));
                 }
             } else {
                 Customer nextCustomer = copyCustomers.get(customerIndex - 1);
@@ -235,7 +234,6 @@ public class Customer extends Interactable {
 
                     if (this.yPosition <= getCustomerOrderPosition(copyCustomers) && !isWaiting) {
                         isWaiting = true;
-                        System.out.println("Customer is waiting for order at position " + (customerIndex + 1));
                     }
                 }
             }
@@ -275,7 +273,6 @@ public class Customer extends Interactable {
             this.isFinished = true;
             copyCustomers.remove(this);
             setText("");
-            System.out.println("Customer left");
         }
     }
     /**
@@ -323,7 +320,6 @@ public class Customer extends Interactable {
     public int calculateRubies(final int correctCount) {
         int correctnessScore = correctCount * 100;
         double timeScore = patience / CUSTOMER_MAX_PATIENCE;
-        System.out.println("Correctness score: " + correctnessScore);
         return (int) (correctnessScore * timeScore);
     }
     /**

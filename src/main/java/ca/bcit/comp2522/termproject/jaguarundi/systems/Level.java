@@ -98,7 +98,6 @@ public class Level {
         for (int i = 0; i < cauldrons.size(); i++) {
             cauldrons.get(i).setXPosition(cauldronPositions[i][0]);
             cauldrons.get(i).setYPosition(cauldronPositions[i][1]);
-            System.out.println(cauldrons.get(i).getXPosition());
         }
         for (int i = 0; i < ingredientBoxes.size(); i++) {
             ingredientBoxes.get(i).setXPosition(ingredientBoxPositions[i][0]);
@@ -335,8 +334,6 @@ public class Level {
         ArrayList<Ingredient> customerOrder = customer.getOrder();
         playerOrder.sort(Comparator.comparing(o -> o.getClass().getName()));
         customerOrder.sort(Comparator.comparing(o -> o.getClass().getName()));
-        System.out.println(playerOrder);
-        System.out.println(customerOrder);
 
         int correctCount = 0;
 
@@ -351,8 +348,6 @@ public class Level {
                 correctCount = 0;
             }
         }
-
-        System.out.println(correctCount);
 
         customer.setSatisfactionLevel(((double) correctCount / customerOrder.size()) * 100);
         gameManager.incrementRubies(customer.calculateRubies(correctCount));

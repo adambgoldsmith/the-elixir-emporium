@@ -86,7 +86,6 @@ public class SaveLoadDialog {
             Button saveButton = new Button(name + "    Level: " + level);
 
             saveButton.setOnAction(event -> {
-                System.out.println(name + " button clicked");
                 dialog.setResult("*" + name + "*" + level);
                 dialog.close();
             });
@@ -100,7 +99,6 @@ public class SaveLoadDialog {
 
         dialog.setResultConverter(buttonType -> {
             if (buttonType == ButtonType.OK) {
-                System.out.println("Enter button clicked");
                 return nameTextField.getText();
             }
             return null;
