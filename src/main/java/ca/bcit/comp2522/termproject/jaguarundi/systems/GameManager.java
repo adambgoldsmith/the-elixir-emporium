@@ -74,13 +74,13 @@ public class GameManager {
                 new TrashCan(700, 50),
                 createCauldrons(4),
                 createIngredientBoxes(2),
-                createCustomers(5, 2),
+                createCustomers(7, 2),
                 createWalls(9)
         );
         level2.initializeObjectPositions(
                 new double[][]{{400, 150}, {400, 350}, {300, 250}, {500, 250}},
                 new double[][]{{350, 50}, {700, 250}, {700, 350}, {300, 450}},
-                new double[][]{{100, 550}, {100,550}, {100, 550}, {100,550}, {100, 550}},
+                new double[][]{{100, 550}, {100,550}, {100, 550}, {100,550}, {100, 550}, {100, 550}, {100, 550}},
                 new double[][]{{50, 0}, {150, 0}, {0, 500}, {150, 500}, {0, 0}, {750, 0}, {150, 50,},
                         {300, 50}, {300, 100}, {350, 100}, {400, 100}, {450, 100},
                         {600, 300}, {600, 350}, {650, 300}, {700, 300}}
@@ -93,13 +93,14 @@ public class GameManager {
                 new TrashCan(650, 300),
                 createCauldrons(5),
                 createIngredientBoxes(3),
-                createCustomers(5, 3),
+                createCustomers(10, 3),
                 createWalls(17)
         );
         level3.initializeObjectPositions(
                 new double[][]{{300, 150}, {400, 50}, {450, 200}, {500, 50}, {600, 150}},
                 new double[][]{{200, 50}, {300, 450}, {400, 450}, {700, 450}, {550, 300}},
-                new double[][]{{100, 550}, {100,550}, {100, 550}, {100,550}, {100, 550}},
+                new double[][]{{100, 550}, {100,550}, {100, 550}, {100,550}, {100, 550}, {100, 550}, {100, 550},
+                        {100, 550}, {100, 550}, {100, 550}},
                 new double[][]{{50, 0}, {150, 0}, {0, 500}, {150, 500}, {0, 0}, {750, 0}, {150, 50},
                         {250, 50}, {250, 100}, {250, 150},
                         {450, 50}, {450, 100}, {450, 150},
@@ -154,11 +155,28 @@ public class GameManager {
      */
     public ArrayList<Customer> createCustomers(int quantity, int level) {
         ArrayList<Customer> customers = new ArrayList<>();
-        // TODO: Add more customers
+        int patience = getPatienceForLevel(level);
+
         for (int i = 0; i < quantity; i++) {
-            customers.add(new Customer(200, 50, level));
+            customers.add(new Customer(200, patience, level));
         }
+
         return customers;
+    }
+
+    /**
+     * Gets the patience for a given level.
+     *
+     * @param level the level of the game
+     * @return the patience for the given level
+     */
+    private int getPatienceForLevel(int level) {
+        return switch (level) {
+            case 1 -> 70;
+            case 2 -> 55;
+            case 3 -> 45;
+            default -> throw new IllegalArgumentException("Invalid customer level: " + level);
+        };
     }
 
     /**

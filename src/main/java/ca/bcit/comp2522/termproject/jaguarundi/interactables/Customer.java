@@ -212,6 +212,11 @@ public class Customer extends Interactable {
 
     public void move(final double delta, final ArrayList<Customer> copyCustomers) {
         int customerIndex = copyCustomers.indexOf(this);
+        int patience_factor = switch (customerLevel) {
+            case 3 -> 11;
+            case 2 -> 9;
+            default -> 8;
+        };
 
         if (!copyCustomers.isEmpty() && customerIndex >= 0 && customerIndex <= 2
                 && this.yPosition > getCustomerOrderPosition(copyCustomers)) {
@@ -224,7 +229,7 @@ public class Customer extends Interactable {
                 }
             } else {
                 Customer nextCustomer = copyCustomers.get(customerIndex - 1);
-                if (nextCustomer.isWaiting && nextCustomer.getPatience() > (double) CUSTOMER_MAX_PATIENCE / 2 + 10) {
+                if (nextCustomer.isWaiting && nextCustomer.getPatience() > this.patience + patience_factor ) {
                     this.yPosition -= delta * speed;
 
                     if (this.yPosition <= getCustomerOrderPosition(copyCustomers) && !isWaiting) {
@@ -281,11 +286,11 @@ public class Customer extends Interactable {
         int numberOfIngredients;
 
         if (customerLevel == 3) {
-            numberOfIngredients = random.nextInt(5 - 2) + 2;
+            numberOfIngredients = random.nextDouble() < 0.6 ? 3 : 4;
         } else if (customerLevel == 2) {
-            numberOfIngredients = random.nextInt(4 - 2) + 2;
+            numberOfIngredients = random.nextDouble() < 0.75 ? 3 : 2;
         } else {
-            numberOfIngredients = random.nextInt(3 - 2) + 2;
+            numberOfIngredients = 2;
         }
 
         for (int i = 0; i < numberOfIngredients; i++) {
@@ -311,9 +316,8 @@ public class Customer extends Interactable {
                 order.add(new FluorescentEgg());
             }
         }
-
-        System.out.println("Customer order: " + order);
     }
+
     /**
      * Calculates the rubies.
      * @param correctCount the correct count
