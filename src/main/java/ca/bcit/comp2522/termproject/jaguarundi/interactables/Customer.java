@@ -213,9 +213,9 @@ public class Customer extends Interactable {
     public void move(final double delta, final ArrayList<Customer> copyCustomers) {
         int customerIndex = copyCustomers.indexOf(this);
         int patience_factor = switch (customerLevel) {
-            case 3 -> 11;
-            case 2 -> 9;
-            default -> 8;
+            case 3 -> 14;
+            case 2 -> 12;
+            default -> 10;
         };
 
         if (!copyCustomers.isEmpty() && customerIndex >= 0 && customerIndex <= 2

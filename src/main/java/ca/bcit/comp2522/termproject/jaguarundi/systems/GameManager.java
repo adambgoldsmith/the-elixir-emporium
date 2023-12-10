@@ -172,8 +172,8 @@ public class GameManager {
      */
     private int getPatienceForLevel(int level) {
         return switch (level) {
-            case 1 -> 70;
-            case 2 -> 55;
+            case 1 -> 60;
+            case 2 -> 50;
             case 3 -> 45;
             default -> throw new IllegalArgumentException("Invalid customer level: " + level);
         };
