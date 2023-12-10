@@ -339,4 +339,29 @@ public class GameManager {
     public int getCurrentLevelIndex() {
         return this.currentLevelIndex;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GameManager that = (GameManager) o;
+        return currentLevelIndex == that.currentLevelIndex && rubies == that.rubies && lastUpdateTime == that.lastUpdateTime && Objects.equals(levels, that.levels) && Objects.equals(inventoryText, that.inventoryText) && Objects.equals(currentUser, that.currentUser);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(levels, currentLevelIndex, rubies, inventoryText, currentUser, lastUpdateTime);
+    }
+
+    @Override
+    public String toString() {
+        return "GameManager{" +
+                "levels=" + levels +
+                ", currentLevelIndex=" + currentLevelIndex +
+                ", rubies=" + rubies +
+                ", inventoryText=" + inventoryText +
+                ", currentUser='" + currentUser + '\'' +
+                ", lastUpdateTime=" + lastUpdateTime +
+                '}';
+    }
 }

@@ -161,4 +161,27 @@ public class GameApp extends Application {
     public boolean getIsGameStarted() {
         return isGameStarted;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GameApp gameApp = (GameApp) o;
+        return isGameStarted == gameApp.isGameStarted && Objects.equals(canvas, gameApp.canvas) && Objects.equals(titleScreen, gameApp.titleScreen) && Objects.equals(gameManager, gameApp.gameManager);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(canvas, titleScreen, gameManager, isGameStarted);
+    }
+
+    @Override
+    public String toString() {
+        return "GameApp{" +
+                "canvas=" + canvas +
+                ", titleScreen=" + titleScreen +
+                ", gameManager=" + gameManager +
+                ", isGameStarted=" + isGameStarted +
+                '}';
+    }
 }

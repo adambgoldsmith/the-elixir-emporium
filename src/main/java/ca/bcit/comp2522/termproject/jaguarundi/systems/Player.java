@@ -307,6 +307,23 @@ public class Player {
         this.inventory = null;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Player player = (Player) o;
+        return Double.compare(speed, player.speed) == 0 && Double.compare(xPosition, player.xPosition) == 0 &&
+                Double.compare(yPosition, player.yPosition) == 0 && Double.compare(xDirection, player.xDirection) == 0
+                && Double.compare(yDirection, player.yDirection) == 0 && Double.compare(width, player.width) == 0 &&
+                Double.compare(height, player.height) == 0 && Objects.equals(inventory, player.inventory) &&
+                Objects.equals(sprite, player.sprite);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(speed, xPosition, yPosition, xDirection, yDirection, width, height, inventory, sprite);
+    }
+
     /**
      * Returns a string representation of the player.
      *

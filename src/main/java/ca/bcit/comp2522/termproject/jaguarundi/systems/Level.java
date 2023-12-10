@@ -370,4 +370,40 @@ public class Level {
     public Player getPlayer() {
         return player;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Level level = (Level) o;
+        return Double.compare(transitionTimer, level.transitionTimer) == 0 && levelCompleted == level.levelCompleted &&
+                Objects.equals(gameManager, level.gameManager) && Objects.equals(player, level.player) &&
+                Objects.equals(bottleBox, level.bottleBox) && Objects.equals(trashCan, level.trashCan) &&
+                Objects.equals(cauldrons, level.cauldrons) && Objects.equals(ingredientBoxes, level.ingredientBoxes) &&
+                Objects.equals(customers, level.customers) && Objects.equals(walls, level.walls) &&
+                Objects.equals(copyCustomers, level.copyCustomers);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(gameManager, player, bottleBox, trashCan, cauldrons, ingredientBoxes, customers, walls,
+                copyCustomers, transitionTimer, levelCompleted);
+    }
+
+    @Override
+    public String toString() {
+        return "Level{" +
+                "gameManager=" + gameManager +
+                ", player=" + player +
+                ", bottleBox=" + bottleBox +
+                ", trashCan=" + trashCan +
+                ", cauldrons=" + cauldrons +
+                ", ingredientBoxes=" + ingredientBoxes +
+                ", customers=" + customers +
+                ", walls=" + walls +
+                ", copyCustomers=" + copyCustomers +
+                ", transitionTimer=" + transitionTimer +
+                ", levelCompleted=" + levelCompleted +
+                '}';
+    }
 }
