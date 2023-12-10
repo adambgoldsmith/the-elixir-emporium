@@ -127,8 +127,8 @@ public class Player {
         // Calculate the distance between the player and the interactable
         double playerX = this.getXPosition() + this.getWidth() / 2;
         double playerY = this.getYPosition() + this.getHeight() / 2;
-        double interactableX = interactable.getXPosition() + (double) interactable.getWidth() / 2;
-        double interactableY = interactable.getYPosition() + (double) interactable.getHeight() / 2;
+        double interactableX = interactable.getXPosition() + interactable.getWidth() / 2;
+        double interactableY = interactable.getYPosition() + interactable.getHeight() / 2;
 
         double distance = Math.sqrt(Math.pow(playerX - interactableX, 2) + Math.pow(playerY - interactableY, 2));
 

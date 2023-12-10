@@ -46,9 +46,9 @@ public class Level {
      */
     public final static Image GAME_COMPLETE_BANNER = new Image(Objects.requireNonNull(Level.class.getResourceAsStream("game_complete.png")));
 
-    private GameManager gameManager;
-    private Player player;
-    private BottleBox bottleBox;
+    private final GameManager gameManager;
+    private final Player player;
+    private final BottleBox bottleBox;
     private TrashCan trashCan;
     private ArrayList<Cauldron> cauldrons;
     private ArrayList<IngredientBox> ingredientBoxes;
@@ -87,10 +87,10 @@ public class Level {
     /**
      * Initializes the positions of the objects.
      *
-     * @param cauldronPositions
-     * @param ingredientBoxPositions
-     * @param customerPositions
-     * @param wallPositions
+     * @param cauldronPositions the cauldron positions
+     * @param ingredientBoxPositions the ingredient box positions
+     * @param customerPositions the customer positions
+     * @param wallPositions the wall positions
      */
     public void initializeObjectPositions(
             double[][] cauldronPositions, double[][] ingredientBoxPositions,
@@ -147,7 +147,7 @@ public class Level {
     /**
      * Draws the level.
      *
-     * @param gc
+     * @param gc the graphics context
      */
     public void drawLevel(GraphicsContext gc) {
         for (Cauldron cauldron : cauldrons) cauldron.draw(gc);
@@ -326,7 +326,6 @@ public class Level {
      * Verifies the order.
      *
      * @param customer the customer
-     * @return true if the order is correct
      */
     public void verifyOrder(Customer customer) {
         Bottle playerBottle = (Bottle) player.getInventory();

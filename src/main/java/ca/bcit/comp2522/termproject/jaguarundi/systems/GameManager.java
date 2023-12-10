@@ -281,7 +281,7 @@ public class GameManager {
     /**
      * Increments the number of rubies.
      *
-     * @param rubies
+     * @param rubies the number of rubies to increment by
      */
     public void incrementRubies(int rubies) {
         this.rubies += rubies;

@@ -1,6 +1,5 @@
 package ca.bcit.comp2522.termproject.jaguarundi.systems;
 
-import ca.bcit.comp2522.termproject.jaguarundi.boxes.HogrootBox;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
@@ -52,8 +51,8 @@ public class TitleScreen {
     private static final String NAME_LEVEL_REGEX = "\\*.*\\*\\d+";
 
 
-    private GameApp gameApp;
-    private GameManager gameManager;
+    private final GameApp gameApp;
+    private final GameManager gameManager;
     private boolean isTutorialOpen = false;
 
     /**
