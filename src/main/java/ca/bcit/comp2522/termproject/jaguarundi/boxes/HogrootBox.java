@@ -13,7 +13,7 @@ public class HogrootBox extends IngredientBox {
     /**
      * The sprite for the hogroot box.
      */
-    public final static Image HOGROOT_BOX_SPRITE = new Image(Objects.requireNonNull(HogrootBox.class.
+    public static final Image HOGROOT_BOX_SPRITE = new Image(Objects.requireNonNull(HogrootBox.class.
             getResourceAsStream("hogroot_crate.png")));
 
     /**

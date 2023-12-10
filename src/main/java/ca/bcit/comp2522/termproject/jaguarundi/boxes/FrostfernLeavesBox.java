@@ -15,7 +15,7 @@ public class FrostfernLeavesBox extends IngredientBox {
     /**
      * The sprite for the frostfern leaves box.
      */
-    public final static Image FROSTFERNLEAVES_BOX_SPRITE = new Image(Objects.
+    public static final Image FROSTFERNLEAVES_BOX_SPRITE = new Image(Objects.
             requireNonNull(FrostfernLeavesBox.class.getResourceAsStream("frostfern_leaves_crate.png")));
 
     /**

@@ -17,7 +17,7 @@ public class BottleBox extends Interactable implements Collidable {
     /**
      * The sprite for the bottle box.
      */
-    public final static Image BOTTLE_BOX_SPRITE = new Image(Objects.requireNonNull(BottleBox.class.
+    public static final Image BOTTLE_BOX_SPRITE = new Image(Objects.requireNonNull(BottleBox.class.
             getResourceAsStream("bottle_table.png")));
     /**
      * The width of the bottle box.

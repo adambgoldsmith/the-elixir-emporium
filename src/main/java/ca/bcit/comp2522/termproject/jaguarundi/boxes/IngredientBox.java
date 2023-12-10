@@ -87,7 +87,7 @@ public class IngredientBox extends Interactable implements Collidable {
      * @param xPosition the x position
      */
 
-    public void setXPosition(double xPosition) {
+    public void setXPosition(final double xPosition) {
         this.xPosition = xPosition;
     }
     /**
@@ -96,7 +96,7 @@ public class IngredientBox extends Interactable implements Collidable {
      * @param yPosition the y position
      */
 
-    public void setYPosition(double yPosition) {
+    public void setYPosition(final double yPosition) {
         this.yPosition = yPosition;
     }
     /**

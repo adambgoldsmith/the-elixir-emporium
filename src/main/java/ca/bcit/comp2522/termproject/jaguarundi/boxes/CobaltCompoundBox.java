@@ -17,7 +17,7 @@ public class CobaltCompoundBox extends IngredientBox {
     /**
      * The sprite for the cobalt compound box.
      */
-    public final static Image COBALT_COMPOUND_BOX_SPRITE = new Image(Objects.requireNonNull(CobaltCompoundBox.class.
+    public static final Image COBALT_COMPOUND_BOX_SPRITE = new Image(Objects.requireNonNull(CobaltCompoundBox.class.
             getResourceAsStream("cobalt_compound_crate.png")));
 
     /**

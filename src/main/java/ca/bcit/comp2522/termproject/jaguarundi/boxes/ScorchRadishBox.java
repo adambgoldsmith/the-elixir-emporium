@@ -15,7 +15,7 @@ public class ScorchRadishBox extends IngredientBox {
     /**
      * The sprite for the scorch radish box.
      */
-    public final static Image SCORCHRADISH_BOX_SPRITE = new Image(Objects.requireNonNull(ScorchRadishBox.class.
+    public static final Image SCORCHRADISH_BOX_SPRITE = new Image(Objects.requireNonNull(ScorchRadishBox.class.
             getResourceAsStream("scorch_radish_crate.png")));
 
     /**

@@ -15,7 +15,7 @@ public class FluorescentEggBox extends IngredientBox {
     /**
      * The sprite for the fluorescent egg box.
      */
-    public final static Image FLUORESCENT_EGG_BOX_SPRITE = new Image(Objects.requireNonNull(FluorescentEggBox.class.
+    public static final Image FLUORESCENT_EGG_BOX_SPRITE = new Image(Objects.requireNonNull(FluorescentEggBox.class.
             getResourceAsStream("fluorescent_egg_crate.png")));
     /**
      * Constructs a fluorescent egg box.
